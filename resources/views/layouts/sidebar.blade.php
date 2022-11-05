@@ -22,17 +22,6 @@
                     <i class="ti-home"></i>
                     <span>Dashboard</span>
                 </a>
-                {{--
-            <li>
-                <a href="#" class="main-menu has-dropdown">
-                    <i class="ti-menu-alt"></i>
-                    <span>Menu Management</span>
-                </a>
-                <ul class="sub-menu ">
-                    <li><a href="table-basic.html" class="link"><span>Table Basic</span></a></li>
-                    <li><a href="table-datatables.html" class="link"><span>DataTables</span></a></li>
-                </ul>
-            </li> --}}
             <li>
                 <a href="charts.html" class="link">
                     <i class="ti-menu-alt"></i>
@@ -40,10 +29,14 @@
                 </a>
             </li>
             <li>
-                <a href="charts.html" class="link">
+                <a href="#" class="main-menu has-dropdown">
                     <i class="ti-eye"></i>
                     <span>Akses Managemen</span>
                 </a>
+                <ul class="sub-menu ">
+                    <li><a href="" class="link"><span>Akun</span></a></li>
+                    <li><a href="{{route('jabatan.index')}}" class="link"><span>Jabatan</span></a></li>
+                </ul>
             </li>
         </ul>
     </div>

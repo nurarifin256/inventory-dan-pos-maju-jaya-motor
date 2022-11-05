@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\JabatanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,13 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $dashboard = 'Dashboard';
-    return view('dashboard', compact('dashboard'));
+    $title = 'Dashboard';
+    return view('dashboard', compact('title'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
+
+Route::middleware('auth')->group(function () {
+    Route::resource('akses/jabatan', JabatanController::class);
+    // Route::post('akses/jabatan/hapus', [JabatanController::class, 'hapus']);
+});
