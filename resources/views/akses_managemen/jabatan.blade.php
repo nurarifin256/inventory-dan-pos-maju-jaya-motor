@@ -20,11 +20,40 @@
                         <h4>Jabatan</h4>
                     </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary mb-3 btn-add">
-                            Tambah Data
-                        </button>
+                        <div class="row justify-content-between">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-primary mb-3 btn-add">
+                                    Tambah Data
+                                </button>
+                            </div>
+                            <div class="offset-md-4 col-md-3">
+                                <input type="text" class="form-control" name="search" id="search" autofocus
+                                    autocomplete="off">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" name="find" value="find" id="btn-cari"
+                                    class="btn btn-sm btn-success"><i class="ti-search"></i></button>
+                                <button type="button" name="reset" value="reset" id="btn-reset"
+                                    class="btn btn-sm btn-primary"><i class="ti-reload"></i></button>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
-                            {{$dataTable->table()}}
+                            <table id="table-jabatan" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Tanggal di buat</th>
+                                        <th>Di buat oleh</th>
+                                        <th>Tanggal di update</th>
+                                        <th>Di update oleh</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -44,9 +73,43 @@
 <script src="{{asset('vendor/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('vendor/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
 <script src="{{asset('vendor/izitoast/dist/js/iziToast.min.js')}}"></script>
-{{$dataTable->scripts()}}
 <script>
     const modal = new bootstrap.Modal($("#modalAction"));
+    var table;
+    table = $('#table-jabatan').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'responsive': true,
+        'ordering': false,
+        'orderable': false,
+        'lengthChange': true,
+        'sDom': 'lrtip',
+        language      : {
+            processing    : '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>',
+            "infoFiltered": ""
+        },
+        "order"       : [],
+        "ajax"        : {
+            "url" : "{{url('akses/jabatan/data_list')}}",
+            "type": "POST",
+            "headers": {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+            "data": function(data) {
+                data.search  = $('#search').val()
+            }
+        },
+    });
+    $('#btn-cari').click(function(){
+        table.ajax.reload(); 
+    });
+    $('#btn-reset').click(function() {
+        $('#search').val("");
+        table.ajax.reload();
+    });
+
 
     function store() {
         $("#form-action").on("submit", function (e) {
@@ -68,7 +131,7 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
-                    window.LaravelDataTables["jabatandatatables-table"].ajax.reload();
+                    table.ajax.reload();
                     modal.hide();
                     iziToast.success({
                         title: 'OK',
@@ -91,7 +154,19 @@
         });
     }
 
-    $("#jabatandatatables-table").on('click', '.action', function(){
+    $('.btn-add').on('click', function(){
+        $.ajax({
+            method: "get",
+            url: `{{url('akses/jabatan/create')}}`,
+            success: function(res){
+                $("#modalAction").find(".modal-dialog").html(res);
+                modal.show();
+                store();
+            }
+        })
+    })
+
+    $("#table-jabatan").on('click', '.action', function(){
         let data  = $(this).data();
         let id    = data.id;
         let jenis = data.jenis;
@@ -116,13 +191,12 @@
                             ),
                         },
                         success: function (res) {
-                            window.LaravelDataTables["jabatandatatables-table"].ajax.reload();
+                            table.ajax.reload();
                             iziToast.success({
                                 title: 'OK',
                                 message: res.message,
                                 position: 'topRight'
                             });
-                            // store()
                         },
                     });
                 }
@@ -141,5 +215,7 @@
             }
         })
     })
+
+    
 </script>
 @endpush

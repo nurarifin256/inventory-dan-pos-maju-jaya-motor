@@ -7,6 +7,7 @@ use App\Http\Requests\JabatanRequest;
 use App\Models\jabatans;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use function Termwind\render;
 
@@ -20,7 +21,7 @@ class JabatanController extends Controller
     public function index(JabatanDataTables $dataTable)
     {
         $title = 'Jabatan';
-        return $dataTable->render('akses_managemen.jabatan', compact('title'));
+        return view('akses_managemen.jabatan', compact('title'));
     }
 
     /**
@@ -30,7 +31,10 @@ class JabatanController extends Controller
      */
     public function create()
     {
-        //
+        $jabatan = new jabatans();
+        $modal_title = "Tambah Jabatan";
+        $tombol = "Simpan";
+        return view('akses_managemen.jabatan-action', compact('jabatan', 'modal_title', 'tombol'));
     }
 
     /**
@@ -39,9 +43,17 @@ class JabatanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(JabatanRequest $request, jabatans $jabatan)
     {
-        //
+        $jabatan->name       = $request->name;
+        $jabatan->updated_by = Auth::user()->name;
+        $jabatan->created_by = Auth::user()->name;
+        $jabatan->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di tambah'
+        ]);
     }
 
     /**
@@ -50,9 +62,10 @@ class JabatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $data = Jabatans::getAll()->get();
+        dd($data);
     }
 
     /**
@@ -64,7 +77,7 @@ class JabatanController extends Controller
     public function edit(jabatans $jabatan)
     {
         $modal_title = "Ubah Jabatan";
-        $tombol = "Simpan";
+        $tombol = "Ubah";
         return view('akses_managemen.jabatan-action', compact('jabatan', 'modal_title', 'tombol'));
     }
 
@@ -103,5 +116,69 @@ class JabatanController extends Controller
             'status'  => 'success',
             'message' => 'Data berhasil di hapus'
         ]);
+    }
+
+    function data_list(Request $req)
+    {
+        $list      = $this->get_list($req);
+        $data      = array();
+        $no        = $req['start'];
+        foreach ($list as $field) {
+            $btn_edit = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+            $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            $btn = $btn_edit . ' ' . $btn_delete;
+
+            $no++;
+            $row   = array();
+            $row[] = $no;
+            $row[] = $field->name;
+            $row[] = $field->created_at;
+            $row[] = $field->created_by;
+            $row[] = $field->updated_at;
+            $row[] = $field->updated_by;
+            $row[] = $btn;
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw"            => $req['draw'],
+            "recordsTotal"    => 0,
+            "recordsFiltered" => $this->count_filtered($req, 'filter'),
+            "data"            => $data,
+        );
+        return response()->json($output);
+    }
+
+    function get_list(Request $req)
+    {
+        $query = $this->sql_list($req);
+
+        if ($req['length'] != -1)
+            $query->offset($req['start'])
+                ->limit($req['length']);
+        $query->orderBy("A1.id", "DESC");
+        return $query->get();
+    }
+
+
+    function sql_list(Request $request)
+    {
+        $seacrh    = $request->search;
+        $where  = (strlen($seacrh) > 0) ? " AND A.name LIKE '%$seacrh%' OR A.created_by LIKE '%$seacrh%' OR A.updated_by LIKE '%$seacrh%'" : "";
+        $sql = "(SELECT *
+                    FROM  jabatans AS A
+                    WHERE A.trashed=0
+                    $where 
+                ) AS A1";
+
+        $sqls = DB::table(DB::raw($sql));
+        return $sqls;
+    }
+
+    function count_filtered($req, $filter = '')
+    {
+        $query = $this->sql_list($req, $filter);
+        $query = $query->get();
+        return $query->count();
     }
 }

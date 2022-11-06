@@ -1,7 +1,10 @@
 <div class="modal-content">
-    <form id="form-action" action="{{route('jabatan.update', $jabatan->id)}}" method="post">
+    <form id="form-action" action="{{$jabatan->id ? route('jabatan.update', $jabatan->id) : route('jabatan.store')}}"
+        method="post">
         @csrf
+        @if ($jabatan->id)
         @method('put')
+        @endif
         <div class="modal-header">
             <h5 class="modal-title" id="largeModalLabel">{{$modal_title}}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -27,5 +27,6 @@ require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
     Route::resource('akses/jabatan', JabatanController::class);
+    Route::post('akses/jabatan/data_list', [JabatanController::class, 'data_list']);
     // Route::post('akses/jabatan/hapus', [JabatanController::class, 'hapus']);
 });
