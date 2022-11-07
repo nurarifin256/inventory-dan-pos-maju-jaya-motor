@@ -1,6 +1,9 @@
 <div class="modal-content">
-    <form id="form-action" action="{{route('akun.store')}}" method="post">
+    <form id="form-action" action="{{$user->id ? route('akun.update', $user->id) : route('akun.store')}}" method="post">
         @csrf
+        @if ($user->id)
+        @method('put')
+        @endif
         <div class="modal-header">
             <h5 class="modal-title" id="largeModalLabel">{{$modal_title}}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -10,28 +13,29 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama</label>
-                        <input type="text" value="{{old('name')}}" placeholder="Masukan nama" name="name"
+                        <input type="text" value="{{$user->name}}" placeholder="Masukan nama" name="name"
                             class="form-control" id="name">
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="text" value="{{old('email')}}" placeholder="Masukan email" name="email"
-                            class="form-control" id="name">
+                        <input type="text" value="{{$user->email}}" placeholder="Masukan email" name="email"
+                            class="form-control" id="email">
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="" class="text-label">Jabatan</label>
-                        <select class="js-example-basic-single form-select" name="jabatan_id">
-                            <option value="{{old('email')}}">Pilih Jabatan</option>
+                        <select class="form-select select_jabatan" name="jabatan_id">
+                            <option value="">Pilih Jabatan</option>
                             @foreach ($jabatan as $id => $j)
-                            <option value="{{$id}}">{{$j}}</option>
+                            <option {{$user->jabatan_id == $id ? "selected" : null}} value="{{$id}}">{{$j}}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
+                @if (!$user->id)
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -39,6 +43,7 @@
                             id="password">
                     </div>
                 </div>
+                @endif
             </div>
         </div>
         <div class="modal-footer">

@@ -165,6 +165,7 @@
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();
+                // $(".select_jabatan").select2();
                 store();
             }
         })
@@ -174,6 +175,8 @@
         let data  = $(this).data();
         let id    = data.id;
         let jenis = data.jenis;
+
+        console.log(id);
 
         if (jenis == 'delete') {
             Swal.fire({

@@ -30,10 +30,11 @@ class AkunController extends Controller
      */
     public function create()
     {
-        $jabatan = jabatans::where('trashed', 0)->pluck('name', 'id');
         $modal_title = "Tambah Jabatan";
-        $tombol = "Simpan";
-        return view('akses_managemen.akun-action', compact('jabatan', 'modal_title', 'tombol'));
+        $tombol      = "Simpan";
+        $jabatan     = jabatans::where('trashed', 0)->pluck('name', 'id');
+        $user        = new User();
+        return view('akses_managemen.akun-action', compact('user', 'jabatan', 'modal_title', 'tombol'));
     }
 
     /**
@@ -64,8 +65,13 @@ class AkunController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
+        $user = User::all();
+        // dd($user);
+        foreach ($user as $u) {
+            echo $u->name;
+        }
     }
 
     /**
@@ -74,13 +80,13 @@ class AkunController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user, Request $request)
+    public function edit(Request $request, $id)
     {
-        $id_user    = $request->id;
         $modal_title = "Ubah Akun";
         $tombol      = "Ubah";
-        $jabatan = jabatans::where('trashed', 0)->pluck('name', 'id');
-        return view('akses_managemen.akun-action', compact('id_user', 'jabatan', 'modal_title', 'tombol'));
+        $user        = User::find($id);
+        $jabatan     = jabatans::where('trashed', 0)->pluck('name', 'id');
+        return view('akses_managemen.akun-action', compact('user', 'jabatan', 'modal_title', 'tombol'));
     }
 
     /**
@@ -90,9 +96,19 @@ class AkunController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user, $id)
     {
-        //
+        $user             = User::find($id);
+        $user->name       = $request->name;
+        $user->email      = $request->email;
+        $user->jabatan_id = $request->jabatan_id;
+        $user->updated_by = Auth::user()->name;
+        $user->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di ubah'
+        ]);
     }
 
     /**

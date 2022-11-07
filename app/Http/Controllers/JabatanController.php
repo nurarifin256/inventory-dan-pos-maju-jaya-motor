@@ -75,6 +75,7 @@ class JabatanController extends Controller
      */
     public function edit(jabatans $jabatan)
     {
+
         $modal_title = "Ubah Jabatan";
         $tombol = "Ubah";
         return view('akses_managemen.jabatan-action', compact('jabatan', 'modal_title', 'tombol'));
