@@ -176,8 +176,6 @@
         let id    = data.id;
         let jenis = data.jenis;
 
-        console.log(id);
-
         if (jenis == 'delete') {
             Swal.fire({
                 title: 'Anda Yakin?',
@@ -191,7 +189,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "delete",
-                        url: `{{url('akses/jabatan')}}/${id}`,
+                        url: `{{url('akses/akun')}}/${id}`,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                                 "content"

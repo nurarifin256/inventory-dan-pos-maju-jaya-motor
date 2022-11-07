@@ -117,9 +117,17 @@ class AkunController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user, $id)
     {
-        //
+        $user             = User::find($id);
+        $user->trashed    = 1;
+        $user->updated_by = Auth::user()->name;
+        $user->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di hapus'
+        ]);
     }
 
     function data_list(Request $req)
