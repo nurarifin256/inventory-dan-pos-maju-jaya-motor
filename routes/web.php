@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AkunController;
 use App\Http\Controllers\JabatanController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,11 @@ Route::get('/dashboard', function () {
 require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
+    // route jabatan
     Route::resource('akses/jabatan', JabatanController::class);
     Route::post('akses/jabatan/data_list', [JabatanController::class, 'data_list']);
-    // Route::post('akses/jabatan/hapus', [JabatanController::class, 'hapus']);
+
+    // route akun
+    Route::resource('akses/akun', AkunController::class);
+    Route::post('akses/akun/data_list', [AkunController::class, 'data_list']);
 });

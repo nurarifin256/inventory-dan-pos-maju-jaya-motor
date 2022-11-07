@@ -34,7 +34,7 @@
                     <span>Akses Managemen</span>
                 </a>
                 <ul class="sub-menu ">
-                    <li><a href="" class="link"><span>Akun</span></a></li>
+                    <li><a href="{{route('akun.index')}}" class="link"><span>Akun</span></a></li>
                     <li><a href="{{route('jabatan.index')}}" class="link"><span>Jabatan</span></a></li>
                 </ul>
             </li>

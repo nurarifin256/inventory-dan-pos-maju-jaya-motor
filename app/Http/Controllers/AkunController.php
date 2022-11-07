@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\JabatanRequest;
+use App\Http\Requests\AkunRequest;
 use App\Models\jabatans;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
-use function Termwind\render;
-
-class JabatanController extends Controller
+class AkunController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,8 +19,8 @@ class JabatanController extends Controller
      */
     public function index()
     {
-        $title = 'Jabatan';
-        return view('akses_managemen.jabatan', compact('title'));
+        $title = 'Akun';
+        return view('akses_managemen.akun', compact('title'));
     }
 
     /**
@@ -30,10 +30,10 @@ class JabatanController extends Controller
      */
     public function create()
     {
-        $jabatan = new jabatans();
+        $jabatan = jabatans::where('trashed', 0)->pluck('name', 'id');
         $modal_title = "Tambah Jabatan";
         $tombol = "Simpan";
-        return view('akses_managemen.jabatan-action', compact('jabatan', 'modal_title', 'tombol'));
+        return view('akses_managemen.akun-action', compact('jabatan', 'modal_title', 'tombol'));
     }
 
     /**
@@ -42,12 +42,15 @@ class JabatanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(JabatanRequest $request, jabatans $jabatan)
+    public function store(AkunRequest $request, User $user)
     {
-        $jabatan->name       = $request->name;
-        $jabatan->updated_by = Auth::user()->name;
-        $jabatan->created_by = Auth::user()->name;
-        $jabatan->save();
+        $user->name       = $request->name;
+        $user->email      = $request->email;
+        $user->jabatan_id = $request->jabatan_id;
+        $user->password   = Hash::make($request->password);
+        $user->updated_by = Auth::user()->name;
+        $user->created_by = Auth::user()->name;
+        $user->save();
 
         return response()->json([
             'status'  => 'success',
@@ -61,10 +64,8 @@ class JabatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
-        // $data = Jabatans::getAll()->get();
-        // dd($data);
     }
 
     /**
@@ -73,11 +74,13 @@ class JabatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(jabatans $jabatan)
+    public function edit(User $user, Request $request)
     {
-        $modal_title = "Ubah Jabatan";
-        $tombol = "Ubah";
-        return view('akses_managemen.jabatan-action', compact('jabatan', 'modal_title', 'tombol'));
+        $id_user    = $request->id;
+        $modal_title = "Ubah Akun";
+        $tombol      = "Ubah";
+        $jabatan = jabatans::where('trashed', 0)->pluck('name', 'id');
+        return view('akses_managemen.akun-action', compact('id_user', 'jabatan', 'modal_title', 'tombol'));
     }
 
     /**
@@ -87,16 +90,9 @@ class JabatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(JabatanRequest $request, jabatans $jabatan)
+    public function update(Request $request, $id)
     {
-        $jabatan->name       = $request->name;
-        $jabatan->updated_by = Auth::user()->name;
-        $jabatan->save();
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Data berhasil di ubah'
-        ]);
+        //
     }
 
     /**
@@ -105,16 +101,9 @@ class JabatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(jabatans $jabatan)
+    public function destroy($id)
     {
-        $jabatan->trashed    = 1;
-        $jabatan->updated_by = Auth::user()->name;
-        $jabatan->save();
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Data berhasil di hapus'
-        ]);
+        //
     }
 
     function data_list(Request $req)
@@ -123,20 +112,22 @@ class JabatanController extends Controller
         $data      = array();
         $no        = $req['start'];
         foreach ($list as $field) {
-            $btn_edit = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
-            $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+
+            $btn_edit = '<button type="button" data-id=' . $field->id_user . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+            $btn_delete = '<button type="button" data-id=' . $field->id_user . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
             $btn = $btn_edit . ' ' . $btn_delete;
 
             $no++;
-            $row   = array();
-            $row[] = $no;
-            $row[] = $field->name;
-            $row[] = $field->created_at;
-            $row[] = $field->created_by;
-            $row[] = $field->updated_at;
-            $row[] = $field->updated_by;
-            $row[] = $btn;
-            $data[] = $row;
+            $row = array();
+            $row[]    = $no;
+            $row[]    = $field->nama_user;
+            $row[]    = $field->email;
+            $row[]    = $field->nama_jabatan;
+            $row[]    = $field->status_user == 0 ? "Aktif" : "Non Aktif";
+            $row[]    = $field->created_at;
+            $row[]    = $field->created_by;
+            $row[]    = $btn;
+            $data[]    = $row;
         }
 
         $output = array(
@@ -155,7 +146,7 @@ class JabatanController extends Controller
         if ($req['length'] != -1)
             $query->offset($req['start'])
                 ->limit($req['length']);
-        $query->orderBy("A1.id", "DESC");
+        $query->orderBy("A1.id_user", "DESC");
         return $query->get();
     }
 
@@ -163,10 +154,11 @@ class JabatanController extends Controller
     function sql_list(Request $request)
     {
         $seacrh    = $request->search;
-        $where  = (strlen($seacrh) > 0) ? " AND A.name LIKE '%$seacrh%' OR A.created_by LIKE '%$seacrh%' OR A.updated_by LIKE '%$seacrh%'" : "";
-        $sql = "(SELECT *
+        $where  = (strlen($seacrh) > 0) ? " AND A.name LIKE '%$seacrh%' OR A.created_by LIKE '%$seacrh%' OR A.updated_by LIKE '%$seacrh%' OR B.name LIKE '%$seacrh%' OR B.email LIKE '%$seacrh%'" : "";
+        $sql = "(SELECT B.id AS id_user, B.name AS nama_user, B.email, A.id AS id_jabatan, A.name AS nama_jabatan, B.created_at, B.created_by, B.status AS status_user
                     FROM  jabatans AS A
-                    WHERE A.trashed=0
+                    INNER JOIN users AS B ON B.jabatan_id=A.id
+                    WHERE B.trashed=0
                     $where 
                 ) AS A1";
 
