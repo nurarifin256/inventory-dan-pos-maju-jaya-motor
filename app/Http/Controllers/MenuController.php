@@ -100,9 +100,16 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Menus $menu)
     {
-        //
+        $menu->trashed    = 1;
+        $menu->updated_by = Auth::user()->name;
+        $menu->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di hapus'
+        ]);
     }
 
     function data_list(Request $req)
