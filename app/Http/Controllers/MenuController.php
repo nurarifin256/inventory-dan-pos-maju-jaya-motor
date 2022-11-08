@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MenuRequest;
 use App\Models\jabatans;
 use App\Models\Menus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
@@ -40,9 +42,20 @@ class MenuController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MenuRequest $request, Menus $menu)
     {
-        //
+        $menu->name       = $request->name;
+        $menu->url        = $request->url;
+        $menu->icon       = $request->icon;
+        $menu->main_menu  = $request->main_menu;
+        $menu->updated_by = Auth::user()->name;
+        $menu->created_by = Auth::user()->name;
+        $menu->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di tambah'
+        ]);
     }
 
     /**
@@ -108,7 +121,7 @@ class MenuController extends Controller
             $row[] = $field->name;
             $row[] = $field->url;
             $row[] = $field->icon;
-            $row[] = $field->main_menu;
+            $row[] = $field->name;
             $row[] = $btn;
             $data[] = $row;
         }

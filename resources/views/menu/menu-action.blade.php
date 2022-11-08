@@ -40,7 +40,7 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="main_mneu" class="form-label">Menu Utama</label>
-                        <select class="form-control" name="main_menu" id="">
+                        <select class="form-control" name="main_menu" id="main_menu">
                             <option value="">-- Default --</option>
                             @foreach($menus as $id => $main_menu)
                             <option value="{{ $id }}">{{ $main_menu }}</option>
