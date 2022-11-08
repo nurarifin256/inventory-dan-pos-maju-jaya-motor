@@ -18,12 +18,12 @@
     <div class="sidebar-content">
         <ul>
             <li class="active">
-                <a href="index.html" class="link">
+                <a href="{{route('dashboard')}}" class="link">
                     <i class="ti-home"></i>
                     <span>Dashboard</span>
                 </a>
             <li>
-                <a href="charts.html" class="link">
+                <a href="{{route('menu.index')}}" class="link">
                     <i class="ti-menu-alt"></i>
                     <span>Menu Managemen</span>
                 </a>
