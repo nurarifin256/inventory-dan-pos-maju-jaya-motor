@@ -21,4 +21,9 @@ class Menus extends Model
 
         return $menus;
     }
+
+    public function subMenus()
+    {
+        return $this->hasMany(Menus::class, 'main_menu');
+    }
 }

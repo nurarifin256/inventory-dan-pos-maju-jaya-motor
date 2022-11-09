@@ -17,27 +17,29 @@
     </div>
     <div class="sidebar-content">
         <ul>
-            <li class="active">
+            <li class="{{request()->segment(1) == 'dashboard' ? 'active' : '' }}">
                 <a href="{{route('dashboard')}}" class="link">
                     <i class="ti-home"></i>
                     <span>Dashboard</span>
                 </a>
-            <li>
-                <a href="{{route('menu.index')}}" class="link">
-                    <i class="ti-menu-alt"></i>
-                    <span>Menu Managemen</span>
-                </a>
             </li>
-            <li>
+
+            @foreach (getMenusSidebar() as $menu)
+            <li class="{{request()->segment(1) == $menu->url ? 'active open' : '' }}">
                 <a href="#" class="main-menu has-dropdown">
-                    <i class="ti-eye"></i>
-                    <span>Akses Managemen</span>
+                    <i class="{{$menu->icon}}"></i>
+                    <span>{{$menu->name}}</span>
                 </a>
-                <ul class="sub-menu ">
-                    <li><a href="{{route('akun.index')}}" class="link"><span>Akun</span></a></li>
-                    <li><a href="{{route('jabatan.index')}}" class="link"><span>Jabatan</span></a></li>
+                <ul class="sub-menu {{request()->segment(1) == $menu->url ? 'expand' : '' }}">
+                    @foreach ($menu->subMenus as $subMenu)
+                    <li
+                        class="{{request()->segment(1) == explode('/', $subMenu->url)[0] && request()->segment(2) == explode( '/', $subMenu->url)[1] ? 'active' : '' }}">
+                        <a href="{{url($subMenu->url)}}" class="link"><span>{{$subMenu->name}}</span></a>
+                    </li>
+                    @endforeach
                 </ul>
             </li>
+            @endforeach
         </ul>
     </div>
 </nav>
