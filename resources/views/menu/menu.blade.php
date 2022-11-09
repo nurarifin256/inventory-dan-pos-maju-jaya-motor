@@ -206,7 +206,7 @@
 
         $.ajax({
             method: "get",
-            url: `{{url('akses/jabatan')}}/${id}/edit`,
+            url: `{{url('menu')}}/${id}/edit`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();

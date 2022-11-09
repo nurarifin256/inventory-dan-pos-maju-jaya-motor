@@ -43,7 +43,8 @@
                         <select class="form-control" name="main_menu" id="main_menu">
                             <option value="">-- Default --</option>
                             @foreach($menus as $id => $main_menu)
-                            <option value="{{ $id }}">{{ $main_menu }}</option>
+                            <option {{ $menu->main_menu === $id ? 'selected' : null }} value="{{$id}}">{{$main_menu}}
+                            </option>
                             @endforeach
                         </select>
                     </div>

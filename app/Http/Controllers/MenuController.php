@@ -77,9 +77,12 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Menus $menu)
     {
-        //
+        $modal_title = "Ubah Menu";
+        $tombol      = "Ubah";
+        $menus = Menus::getMenus();
+        return view('menu.menu-action', compact('menu', 'menus', 'modal_title', 'tombol'));
     }
 
     /**
@@ -89,9 +92,19 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Menus $menu)
     {
-        //
+        $menu->name       = $request->name;
+        $menu->url        = $request->url;
+        $menu->icon       = $request->icon;
+        $menu->main_menu  = $request->main_menu;
+        $menu->updated_by = Auth::user()->name;
+        $menu->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di ubah'
+        ]);
     }
 
     /**
@@ -128,7 +141,7 @@ class MenuController extends Controller
             $row[] = $field->name;
             $row[] = $field->url;
             $row[] = $field->icon;
-            $row[] = $field->name;
+            $row[] = $field->main_menu == null ? "" : $field->name;
             $row[] = $btn;
             $data[] = $row;
         }
