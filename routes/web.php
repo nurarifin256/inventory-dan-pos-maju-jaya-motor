@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     // route jabatan
     Route::resource('akses/jabatan', JabatanController::class);
     Route::post('akses/jabatan/data_list', [JabatanController::class, 'data_list']);
+    Route::post('akses/jabatan/edit_akses', [JabatanController::class, 'edit_akses']);
+    Route::get('/akses/jabatan/{id}/data_akses', [JabatanController::class, 'data_akses']);
 
     // route akun
     Route::resource('akses/akun', AkunController::class);

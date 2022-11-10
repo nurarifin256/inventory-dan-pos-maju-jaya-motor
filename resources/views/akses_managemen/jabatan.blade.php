@@ -44,10 +44,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama</th>
-                                        <th>Tanggal di buat</th>
-                                        <th>Di buat oleh</th>
-                                        <th>Tanggal di update</th>
-                                        <th>Di update oleh</th>
+                                        <th>Akses</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -203,7 +200,6 @@
             })
             return;
         }
-
 
         $.ajax({
             method: "get",
