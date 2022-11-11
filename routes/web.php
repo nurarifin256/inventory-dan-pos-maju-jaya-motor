@@ -41,4 +41,7 @@ Route::middleware('auth')->group(function () {
     // route menu
     Route::resource('menu', MenuController::class);
     Route::post('menu/data_list', [MenuController::class, 'data_list']);
+
+    // route locator
+
 });

@@ -18,6 +18,9 @@ class MenuController extends Controller
      */
     public function index()
     {
+        if (cekAkses(Auth::user()->id, "Menu Managemen", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $title = "Menu";
         return view('menu.menu', compact('title'));
     }
@@ -29,6 +32,10 @@ class MenuController extends Controller
      */
     public function create()
     {
+        if (cekAkses(Auth::user()->id, "Menu Managemen", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $modal_title = "Tambah Menu";
         $tombol = "Simpan";
         $menu = new Menus();
@@ -44,6 +51,9 @@ class MenuController extends Controller
      */
     public function store(MenuRequest $request, Menus $menu)
     {
+        if (cekAkses(Auth::user()->id, "Menu Managemen", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $menu->name       = $request->name;
         $menu->url        = $request->url;
         $menu->icon       = $request->icon;
@@ -79,6 +89,9 @@ class MenuController extends Controller
      */
     public function edit(Menus $menu)
     {
+        if (cekAkses(Auth::user()->id, "Menu Managemen", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $modal_title = "Ubah Menu";
         $tombol      = "Ubah";
         $menus = Menus::getMenus();
@@ -94,6 +107,9 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menus $menu)
     {
+        if (cekAkses(Auth::user()->id, "Menu Managemen", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $menu->name       = $request->name;
         $menu->url        = $request->url;
         $menu->icon       = $request->icon;
@@ -115,6 +131,9 @@ class MenuController extends Controller
      */
     public function destroy(Menus $menu)
     {
+        if (cekAkses(Auth::user()->id, "Menu Managemen", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $menu->trashed    = 1;
         $menu->updated_by = Auth::user()->name;
         $menu->save();
@@ -131,8 +150,14 @@ class MenuController extends Controller
         $data      = array();
         $no        = $req['start'];
         foreach ($list as $field) {
-            $btn_edit = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
-            $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            $btn_edit   = "";
+            $btn_delete = "";
+            if (cekAkses(Auth::user()->id, "Menu Managemen", "ubah") == TRUE) {
+                $btn_edit = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+            }
+            if (cekAkses(Auth::user()->id, "Menu Managemen", "ubah") == TRUE) {
+                $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            }
             $btn = $btn_edit . ' ' . $btn_delete;
 
             $no++;

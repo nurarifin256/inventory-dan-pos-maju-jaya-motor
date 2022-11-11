@@ -19,6 +19,9 @@ class AkunController extends Controller
      */
     public function index()
     {
+        if (cekAkses(Auth::user()->id, "Akun", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $title = 'Akun';
         return view('akses_managemen.akun', compact('title'));
     }
@@ -30,6 +33,10 @@ class AkunController extends Controller
      */
     public function create()
     {
+        if (cekAkses(Auth::user()->id, "Akun", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $modal_title = "Tambah Jabatan";
         $tombol      = "Simpan";
         $jabatan     = jabatans::where('trashed', 0)->pluck('name', 'id');
@@ -45,6 +52,10 @@ class AkunController extends Controller
      */
     public function store(AkunRequest $request, User $user)
     {
+        if (cekAkses(Auth::user()->id, "Akun", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $user->name       = $request->name;
         $user->email      = $request->email;
         $user->jabatan_id = $request->jabatan_id;
@@ -82,6 +93,10 @@ class AkunController extends Controller
      */
     public function edit(Request $request, $id)
     {
+        if (cekAkses(Auth::user()->id, "Akun", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $modal_title = "Ubah Akun";
         $tombol      = "Ubah";
         $user        = User::find($id);
@@ -98,6 +113,10 @@ class AkunController extends Controller
      */
     public function update(Request $request, User $user, $id)
     {
+        if (cekAkses(Auth::user()->id, "Akun", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $user             = User::find($id);
         $user->name       = $request->name;
         $user->email      = $request->email;
@@ -119,6 +138,10 @@ class AkunController extends Controller
      */
     public function destroy(User $user, $id)
     {
+        if (cekAkses(Auth::user()->id, "Akun", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $user             = User::find($id);
         $user->trashed    = 1;
         $user->updated_by = Auth::user()->name;
@@ -136,9 +159,15 @@ class AkunController extends Controller
         $data      = array();
         $no        = $req['start'];
         foreach ($list as $field) {
+            $btn_edit   = '';
+            $btn_delete = '';
 
-            $btn_edit = '<button type="button" data-id=' . $field->id_user . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
-            $btn_delete = '<button type="button" data-id=' . $field->id_user . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            if (cekAkses(Auth::user()->id, "Akun", "ubah") == TRUE) {
+                $btn_edit = '<button type="button" data-id=' . $field->id_user . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+            }
+            if (cekAkses(Auth::user()->id, "Akun", "hapus") == TRUE) {
+                $btn_delete = '<button type="button" data-id=' . $field->id_user . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            }
             $btn = $btn_edit . ' ' . $btn_delete;
 
             $no++;

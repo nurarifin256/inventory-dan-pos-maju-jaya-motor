@@ -23,9 +23,11 @@
                     <div class="card-body">
                         <div class="row justify-content-between">
                             <div class="col-md-3">
+                                @if (cekAkses(Auth::user()->id, "Akun", "tambah"))
                                 <button type="button" class="btn btn-primary mb-3 btn-add">
                                     Tambah Data
                                 </button>
+                                @endif
                             </div>
                             <div class="offset-md-4 col-md-3">
                                 <input type="text" class="form-control" name="search" id="search" autofocus

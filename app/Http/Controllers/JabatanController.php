@@ -23,6 +23,9 @@ class JabatanController extends Controller
      */
     public function index()
     {
+        if (cekAkses(Auth::user()->id, "Jabatan", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
         $title = 'Jabatan';
         return view('akses_managemen.jabatan', compact('title'));
     }
@@ -34,6 +37,10 @@ class JabatanController extends Controller
      */
     public function create()
     {
+        if (cekAkses(Auth::user()->id, "Jabatan", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $jabatan = new jabatans();
         $modal_title = "Tambah Jabatan";
         $tombol = "Simpan";
@@ -48,6 +55,10 @@ class JabatanController extends Controller
      */
     public function store(JabatanRequest $request, jabatans $jabatan)
     {
+        if (cekAkses(Auth::user()->id, "Jabatan", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $jabatan->name       = $request->name;
         $jabatan->updated_by = Auth::user()->name;
         $jabatan->created_by = Auth::user()->name;
@@ -79,6 +90,9 @@ class JabatanController extends Controller
      */
     public function edit(jabatans $jabatan)
     {
+        if (cekAkses(Auth::user()->id, "Jabatan", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
 
         $modal_title = "Ubah Jabatan";
         $tombol = "Ubah";
@@ -94,6 +108,10 @@ class JabatanController extends Controller
      */
     public function update(JabatanRequest $request, jabatans $jabatan)
     {
+        if (cekAkses(Auth::user()->id, "Jabatan", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $jabatan->name       = $request->name;
         $jabatan->updated_by = Auth::user()->name;
         $jabatan->save();
@@ -112,6 +130,10 @@ class JabatanController extends Controller
      */
     public function destroy(jabatans $jabatan)
     {
+        if (cekAkses(Auth::user()->id, "Jabatan", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $jabatan->trashed    = 1;
         $jabatan->updated_by = Auth::user()->name;
         $jabatan->save();

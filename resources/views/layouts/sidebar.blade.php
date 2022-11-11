@@ -25,6 +25,7 @@
             </li>
 
             @foreach (getMenusSidebar() as $menu)
+            @if (cekAkses(Auth::user()->id, $menu->name, "lihat") == TRUE)
             <li class="{{request()->segment(1) == $menu->url ? 'active open' : '' }}">
                 <a href="#" class="main-menu has-dropdown">
                     <i class="{{$menu->icon}}"></i>
@@ -32,13 +33,16 @@
                 </a>
                 <ul class="sub-menu {{request()->segment(1) == $menu->url ? 'expand' : '' }}">
                     @foreach ($menu->subMenus as $subMenu)
+                    @if (cekAkses(Auth::user()->id, $subMenu->name, "lihat") == TRUE)
                     <li
                         class="{{request()->segment(1) == explode('/', $subMenu->url)[0] && request()->segment(2) == explode( '/', $subMenu->url)[1] ? 'active' : '' }}">
                         <a href="{{url($subMenu->url)}}" class="link"><span>{{$subMenu->name}}</span></a>
                     </li>
+                    @endif
                     @endforeach
                 </ul>
             </li>
+            @endif
             @endforeach
         </ul>
     </div>
