@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\JabatanRequest;
+use App\Models\IjinJabatans;
 use App\Models\Ijins;
 use App\Models\jabatans;
 use App\Models\Menus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 use function Termwind\render;
 
@@ -63,10 +65,10 @@ class JabatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(jabatans $jabatans)
     {
-        $ijin = Ijins::all();
-        dd($ijin);
+        $ijin = $jabatans->getAll2()->get();
+        dd($ijin[0]);
     }
 
     /**
@@ -126,8 +128,16 @@ class JabatanController extends Controller
         $data      = array();
         $no        = $req['start'];
         foreach ($list as $field) {
-            $btn_edit   = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
-            $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            if (cekAkses(Auth::user()->id, "Jabatan", "ubah") == TRUE) {
+                $btn_edit   = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+            } else {
+                $btn_edit = '';
+            }
+            if (cekAkses(Auth::user()->id, "Jabatan", "hapus") == TRUE) {
+                $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+            } else {
+                $btn_delete = '';
+            }
 
             $btn_akses = '<a href="/akses/jabatan/' . $field->id . '/data_akses" class="btn btn-primary btn-sm">Lihat Akses</a>';
             $btn        = $btn_edit . ' ' . $btn_delete;
@@ -186,24 +196,47 @@ class JabatanController extends Controller
     public function data_akses($id)
     {
         $title = "Edit Akses";
+
+        $id_user = Auth::user()->id;
+        $idJabatan = Menus::getIdIjinIdJabatan($id_user);
         $jabatan = jabatans::find($id);
         $menus = Menus::where('trashed', 0)->get();
-        return view('akses_managemen.data-akses', compact('title', 'menus', 'jabatan'));
+        return view('akses_managemen.data-akses', compact('title', 'menus', 'jabatan', 'idJabatan'));
     }
 
-    public function edit_akses(Request $request, Ijins $ijin)
+    public function edit_akses(Request $request, Ijins $ijin, IjinJabatans $ijinJabatan)
     {
-        $menu = $request->menu;
-        $aksi = $request->aksi;
-        $name = $menu . " " . $aksi;
+        $menu       = $request->menu;
+        $aksi       = $request->aksi;
+        $jabatan_id = $request->jabatan_id;
 
-        $cari = Ijins::where('name', $name)->first();
+        $cek = DB::table('ijin_jabatans AS A')
+            ->join('ijins AS B', 'B.id', '=', 'A.ijin_id')
+            ->select('B.id')
+            ->where([
+                'B.name' => $menu,
+                'B.aksi' => $aksi,
+                'A.jabatan_id' => $jabatan_id
+            ])
+            ->first();
 
-        if ($cari == null) {
-            $ijin->name       = $name;
+        if ($cek == null) {
+            $ijin->name       = $menu;
+            $ijin->aksi       = $aksi;
             $ijin->save();
+            $last_id = $ijin->id;
+
+            $ijinJabatan->ijin_id    = $last_id;
+            $ijinJabatan->jabatan_id = $jabatan_id;
+            $ijinJabatan->save();
         } else {
-            DB::table('ijins')->where('name', $name)->delete();
+            DB::table('ijin_jabatans')->where([
+                'ijin_id' => $cek->id,
+                'jabatan_id' => $jabatan_id,
+            ])->delete();
+            DB::table('ijins')->where([
+                'id' => $cek->id,
+            ])->delete();
         }
 
         return response()->json([

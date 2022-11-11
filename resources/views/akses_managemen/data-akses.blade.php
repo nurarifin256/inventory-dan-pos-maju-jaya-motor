@@ -21,8 +21,8 @@
                         @foreach ($menus as $menu)
                         <h6 class="text-label">{{$menu->name}}</h6>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="read" value=""
-                                data-menu="{{$menu->name}}" data-aksi="lihat">
+                            <input class="form-check-input" type="checkbox" id="read" data-menu="{{$menu->name}}"
+                                data-aksi="lihat">
                             <label class="form-check-label" for="read">Lihat</label>
                         </div>
                         <div class="form-check form-check-inline">
@@ -72,6 +72,7 @@
                     message: res.message,
                     position: 'topRight'
                 });
+                // console.log(res);
             }
         })
     })

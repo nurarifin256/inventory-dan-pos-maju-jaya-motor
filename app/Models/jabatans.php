@@ -21,4 +21,10 @@ class jabatans extends Model
         $jabatan = DB::table('jabatans')->pluck('name', 'id')->where('trashed', 0);
         return $jabatan;
     }
+
+    static function getAll2()
+    {
+        $jabatan = DB::table('jabatans')->where('trashed', 0);
+        return $jabatan;
+    }
 }
