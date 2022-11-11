@@ -3,6 +3,7 @@
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\RakController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('menu', MenuController::class);
     Route::post('menu/data_list', [MenuController::class, 'data_list']);
 
-    // route locator
-
+    // route rak
+    Route::resource('inventory/rak', RakController::class);
+    Route::post('inventory/rak/data_list', [RakController::class, 'data_list']);
 });

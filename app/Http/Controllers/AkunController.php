@@ -100,7 +100,7 @@ class AkunController extends Controller
         $modal_title = "Ubah Akun";
         $tombol      = "Ubah";
         $user        = User::find($id);
-        $jabatan     = jabatans::where('trashed', 0)->pluck('name', 'id');
+        $jabatan     = jabatans::getAll();
         return view('akses_managemen.akun-action', compact('user', 'jabatan', 'modal_title', 'tombol'));
     }
 
