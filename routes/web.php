@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RakController;
 use Illuminate\Support\Facades\Route;
@@ -46,4 +47,8 @@ Route::middleware('auth')->group(function () {
     // route rak
     Route::resource('inventory/rak', RakController::class);
     Route::post('inventory/rak/data_list', [RakController::class, 'data_list']);
+
+    // route level
+    Route::resource('inventory/level', LevelController::class);
+    Route::post('inventory/level/data_list', [LevelController::class, 'data_list']);
 });
