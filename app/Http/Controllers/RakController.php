@@ -83,7 +83,14 @@ class RakController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Rak", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $modal_title = "Ubah Data";
+        $tombol = "Ubah";
+        $rack = Racks::find($id);
+        return view('rak.rak-action', compact('modal_title', 'tombol', 'rack'));
     }
 
     /**
@@ -95,7 +102,19 @@ class RakController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Rak", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $rack             = Racks::find($id);
+        $rack->no       = $request->no;
+        $rack->updated_by = Auth::user()->name;
+        $rack->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di ubah'
+        ]);
     }
 
     /**
