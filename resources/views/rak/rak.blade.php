@@ -166,7 +166,7 @@
         })
     })
 
-    $("#table-jabatan").on('click', '.action', function(){
+    $("#table-rak").on('click', '.action', function(){
         let data  = $(this).data();
         let id    = data.id;
         let jenis = data.jenis;
@@ -184,7 +184,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "delete",
-                        url: `{{url('akses/jabatan')}}/${id}`,
+                        url: `{{url('inventory/rak')}}/${id}`,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                                 "content"
@@ -206,7 +206,7 @@
 
         $.ajax({
             method: "get",
-            url: `{{url('akses/jabatan')}}/${id}/edit`,
+            url: `{{url('inventory/rak')}}/${id}/edit`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();

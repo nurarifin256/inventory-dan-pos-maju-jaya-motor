@@ -104,9 +104,21 @@ class RakController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Racks $rack, $id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Rak", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $rack             = Racks::find($id);
+        $rack->trashed    = 1;
+        $rack->updated_by = Auth::user()->name;
+        $rack->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di hapus'
+        ]);
     }
 
     function data_list(Request $req)
