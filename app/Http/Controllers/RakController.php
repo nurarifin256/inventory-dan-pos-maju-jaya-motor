@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\jabatans;
+use App\Http\Requests\RackRequest;
 use App\Models\Racks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +32,14 @@ class RakController extends Controller
      */
     public function create()
     {
+        if (cekAkses(Auth::user()->id, "Rak", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $modal_title = "Tambah Data";
+        $tombol      = "Simpan";
+        $rack        = new Racks();
+        return view('rak.rak-action', compact('modal_title', 'tombol', 'rack'));
     }
 
     /**
@@ -40,9 +48,21 @@ class RakController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RackRequest $request, Racks $racks)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Rak", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $racks->no         = $request->no;
+        $racks->updated_by = Auth::user()->name;
+        $racks->created_by = Auth::user()->name;
+        $racks->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di tambah'
+        ]);
     }
 
     /**

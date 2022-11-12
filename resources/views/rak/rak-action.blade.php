@@ -1,8 +1,7 @@
 <div class="modal-content">
-    <form id="form-action" action="{{$jabatan->id ? route('jabatan.update', $jabatan->id) : route('jabatan.store')}}"
-        method="post">
+    <form id="form-action" action="{{$rack->id ? route('rak.update', $rack->id) : route('rak.store')}}" method="post">
         @csrf
-        @if ($jabatan->id)
+        @if ($rack->id)
         @method('put')
         @endif
         <div class="modal-header">
@@ -13,8 +12,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nama Jabatan</label>
-                        <input type="text" value="{{$jabatan->name}}" placeholder="Masukan nama" name="name"
+                        <label for="name" class="form-label">No / Nama Rak</label>
+                        <input type="text" value="{{$rack->no}}" placeholder="Masukan nomor/rak" name="no"
                             class="form-control" id="name">
                     </div>
                 </div>
