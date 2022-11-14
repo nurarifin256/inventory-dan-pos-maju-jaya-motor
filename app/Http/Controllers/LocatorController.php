@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LocatorRequest;
 use App\Models\Levels;
-use App\Models\Locator;
+use App\Models\Locators;
 use App\Models\Racks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,10 +38,10 @@ class LocatorController extends Controller
         }
 
         $modal_title = "Tambah Data";
-        $tombol = "Tambah";
-        $racks = Racks::where('trashed', 0)->pluck('no', 'id');
-        $levels = Levels::where('trashed', 0)->pluck('level', 'id');
-        $locator = new Locator();
+        $tombol      = "Tambah";
+        $racks       = Racks::where('trashed', 0)->pluck('no', 'id');
+        $levels      = Levels::where('trashed', 0)->pluck('level', 'id');
+        $locator     = new Locators();
 
         return view('locator.locator-action', compact('modal_title', 'tombol', 'racks', 'levels', 'locator'));
     }
@@ -51,9 +52,38 @@ class LocatorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LocatorRequest $request, Locators $locator)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Locator", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $no       = $request->no;
+        $level_id = $request->level_id;
+        $rack_id  = $request->rack_id;
+
+        $cek_locator = Locators::cek_locator($no, $level_id, $rack_id);
+
+        if ($cek_locator == null) {
+            $locator->no         = $no;
+            $locator->level_id   = $level_id;
+            $locator->rack_id    = $rack_id;
+            $locator->created_by = Auth::user()->name;
+            $locator->updated_by = Auth::user()->name;
+            $locator->save();
+
+            return response()->json([
+                'status'  => 'success',
+                'title'   => 'OK',
+                'message' => 'Data berhasil di tambah'
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 'error',
+                'title'   => 'Error',
+                'message' => 'Locator sudah terdaftar'
+            ]);
+        }
     }
 
     /**
@@ -62,9 +92,9 @@ class LocatorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Locators $locators)
     {
-        //
+        dd($locators);
     }
 
     /**
@@ -73,9 +103,18 @@ class LocatorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Locators $locator)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Locator", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $modal_title = "Ubah Data";
+        $tombol      = "Ubah";
+        $racks       = Racks::where('trashed', 0)->pluck('no', 'id');
+        $levels      = Levels::where('trashed', 0)->pluck('level', 'id');
+
+        return view('locator.locator-action', compact('modal_title', 'tombol', 'racks', 'levels', 'locator'));
     }
 
     /**
@@ -85,9 +124,38 @@ class LocatorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(LocatorRequest $request, Locators $locator)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Locator", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $no       = $request->no;
+        $level_id = $request->level_id;
+        $rack_id  = $request->rack_id;
+
+        $cek_locator = Locators::cek_locator($no, $level_id, $rack_id);
+
+        if ($cek_locator == null) {
+            $locator->no         = $no;
+            $locator->level_id   = $level_id;
+            $locator->rack_id    = $rack_id;
+            $locator->created_by = Auth::user()->name;
+            $locator->updated_by = Auth::user()->name;
+            $locator->save();
+
+            return response()->json([
+                'status'  => 'success',
+                'title'   => 'OK',
+                'message' => 'Data berhasil di tambah'
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 'error',
+                'title'   => 'Error',
+                'message' => 'Locator sudah terdaftar'
+            ]);
+        }
     }
 
     /**
@@ -96,9 +164,21 @@ class LocatorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Locators $locator)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Locator", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $locator->trashed    = 1;
+        $locator->updated_by = Auth::user()->name;
+        $locator->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'title'   => 'OK',
+            'message' => 'Data berhasil di hapus'
+        ]);
     }
 
     function data_list(Request $req)
@@ -110,10 +190,10 @@ class LocatorController extends Controller
             $btn_edit = '';
             $btn_delete = '';
             if (cekAkses(Auth::user()->id, "Locator", "ubah") == TRUE) {
-                $btn_edit   = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+                $btn_edit   = '<button type="button" data-id=' . $field->id_locators . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
             }
             if (cekAkses(Auth::user()->id, "Locator", "hapus") == TRUE) {
-                $btn_delete = '<button type="button" data-id=' . $field->id . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
+                $btn_delete = '<button type="button" data-id=' . $field->id_locators . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
             }
 
             $btn        = $btn_edit . ' ' . $btn_delete;
@@ -124,7 +204,7 @@ class LocatorController extends Controller
             $row[] = $field->no_rack;
             $row[] = $field->level;
             $row[] = $field->no_locator;
-            $row[] = $field->status == 0 ? "Terisi" : "Kosong";
+            $row[] = $field->status == 0 ? "Kosong" : "Terisi";
             $row[] = $field->created_at;
             $row[] = $field->created_by;
             $row[] = $btn;

@@ -14,7 +14,7 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="no" class="form-label">Nomor</label>
-                        <input type="text" value="{{$locator->no}}" placeholder="Masukan nomor locator" name="no"
+                        <input type="number" value="{{$locator->no}}" placeholder="Masukan nomor locator" name="no"
                             class="form-control" id="no">
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         <select class="form-select" name="rack_id">
                             <option value="">Pilih Rak</option>
                             @foreach ($racks as $id => $r)
-                            <option {{$locator->level_id == $id ? "selected" : null}} value="{{$id}}">{{$r}}</option>
+                            <option {{$locator->rack_id == $id ? "selected" : null}} value="{{$id}}">{{$r}}</option>
                             @endforeach
                         </select>
                     </div>

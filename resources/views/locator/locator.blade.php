@@ -137,13 +137,22 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
+                    status = res.status
                     table.ajax.reload();
                     modal.hide();
-                    iziToast.success({
-                        title: 'OK',
-                        message: res.message,
-                        position: 'topRight'
-                    });
+                    if (status == 'success') {
+                        iziToast.success({
+                            title: res.title,
+                            message: res.message,
+                            position: 'topRight'
+                        });
+                    } else {
+                        iziToast.error({
+                            title: res.title,
+                            message: res.message,
+                            position: 'topRight'
+                        });
+                    }
                 },
                 error: function (res) {
                     let errors = res.responseJSON?.errors;
@@ -191,7 +200,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "delete",
-                        url: `{{url('akses/akun')}}/${id}`,
+                        url: `{{url('inventory/locator')}}/${id}`,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                                 "content"
@@ -213,7 +222,7 @@
 
         $.ajax({
             method: "get",
-            url: `{{url('akses/akun')}}/${id}/edit`,
+            url: `{{url('inventory/locator')}}/${id}/edit`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();
