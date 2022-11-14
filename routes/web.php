@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
@@ -71,4 +72,8 @@ Route::middleware('auth')->group(function () {
     // route merek
     Route::resource('inventory/merek', MerekController::class);
     Route::post('inventory/merek/data_list', [MerekController::class, 'data_list']);
+
+    // route barang
+    Route::resource('inventory/barang', BarangController::class);
+    Route::post('inventory/barang/data_list', [BarangController::class, 'data_list']);
 });

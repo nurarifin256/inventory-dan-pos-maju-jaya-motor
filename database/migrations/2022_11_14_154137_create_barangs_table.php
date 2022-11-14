@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('categori_id');
+            $table->string('nama', 50);
+            $table->decimal('harga', $precision = 8, $scale = 2);
+            $table->string('created_by', 50);
+            $table->string('updated_by', 50);
+            $table->tinyInteger('trashed')->default(0);
             $table->timestamps();
         });
     }
