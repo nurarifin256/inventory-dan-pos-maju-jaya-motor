@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\MenuController;
@@ -56,4 +57,8 @@ Route::middleware('auth')->group(function () {
     // route locator
     Route::resource('inventory/locator', LocatorController::class);
     Route::post('inventory/locator/data_list', [LocatorController::class, 'data_list']);
+
+    // route kategori barang
+    Route::resource('inventory/kategori', KategoriController::class);
+    Route::post('inventory/kategori/data_list', [KategoriController::class, 'data_list']);
 });
