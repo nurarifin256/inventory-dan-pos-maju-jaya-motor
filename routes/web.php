@@ -6,6 +6,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MerekController;
 use App\Http\Controllers\RakController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -66,4 +67,8 @@ Route::middleware('auth')->group(function () {
     // route supplier
     Route::resource('inventory/supplier', SupplierController::class);
     Route::post('inventory/supplier/data_list', [SupplierController::class, 'data_list']);
+
+    // route merek
+    Route::resource('inventory/merek', MerekController::class);
+    Route::post('inventory/merek/data_list', [MerekController::class, 'data_list']);
 });

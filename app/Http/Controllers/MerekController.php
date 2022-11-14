@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SupplierRequest;
-use App\Models\Supplier;
+use App\Http\Requests\MerekRequest;
+use App\Models\Mereks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class SupplierController extends Controller
+class MerekController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,12 +17,12 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        if (cekAkses(Auth::user()->id, "Supplier", "lihat") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Merek Barang", "lihat") != TRUE) {
             abort(403, 'unauthorized');
         }
 
-        $title = "Supplier";
-        return view('supplier.supplier', compact('title'));
+        $title = "Merek Barang";
+        return view('merek.merek', compact('title'));
     }
 
     /**
@@ -30,15 +30,17 @@ class SupplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Supplier $supplier)
+    public function create()
     {
-        if (cekAkses(Auth::user()->id, "Supplier", "tambah") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Merek Barang", "tambah") != TRUE) {
             abort(403, 'unauthorized');
         }
 
         $modal_title = "Tambah Data";
-        $tombol      = "Tambah";
-        return view('supplier.supplier-action', compact('modal_title', 'tombol', 'supplier'));
+        $tombol = "Tambah";
+        $merek = new Mereks();
+
+        return view('merek.merek-action', compact('modal_title', 'tombol', 'merek'));
     }
 
     /**
@@ -47,16 +49,16 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SupplierRequest $request, Supplier $supplier)
+    public function store(MerekRequest $request, Mereks $merek)
     {
-        if (cekAkses(Auth::user()->id, "Supplier", "tambah") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Merek Barang", "tambah") != TRUE) {
             abort(403, 'unauthorized');
         }
 
-        $supplier->nama       = $request->nama;
-        $supplier->created_by = Auth::user()->name;
-        $supplier->updated_by = Auth::user()->name;
-        $supplier->save();
+        $merek->nama = $request->nama;
+        $merek->created_by = Auth::user()->name;
+        $merek->updated_by = Auth::user()->name;
+        $merek->save();
 
         return response()->json([
             'status'  => 'success',
@@ -81,16 +83,15 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Supplier $supplier)
+    public function edit(Mereks $merek)
     {
-        if (cekAkses(Auth::user()->id, "Supplier", "ubah") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Merek Barang", "ubah") != TRUE) {
             abort(403, 'unauthorized');
         }
 
         $modal_title = "Ubah Data";
-        $tombol      = "Ubah";
-
-        return view('supplier.supplier-action', compact('modal_title', 'tombol', 'supplier'));
+        $tombol = "Ubah";
+        return view('merek.merek-action', compact('modal_title', 'tombol', 'merek'));
     }
 
     /**
@@ -100,15 +101,15 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(SupplierRequest $request, Supplier $supplier)
+    public function update(MerekRequest $request, Mereks $merek)
     {
-        if (cekAkses(Auth::user()->id, "Supplier", "ubah") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Merek Barang", "ubah") != TRUE) {
             abort(403, 'unauthorized');
         }
 
-        $supplier->nama       = $request->nama;
-        $supplier->updated_by = Auth::user()->name;
-        $supplier->save();
+        $merek->nama       = $request->nama;
+        $merek->updated_by = Auth::user()->name;
+        $merek->save();
 
         return response()->json([
             'status'  => 'success',
@@ -122,15 +123,15 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Supplier $supplier)
+    public function destroy(Mereks $merek)
     {
-        if (cekAkses(Auth::user()->id, "Supplier", "hapus") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Merek Barang", "hapus") != TRUE) {
             abort(403, 'unauthorized');
         }
 
-        $supplier->trashed    = 1;
-        $supplier->updated_by = Auth::user()->name;
-        $supplier->save();
+        $merek->trashed = 1;
+        $merek->updated_by = Auth::user()->name;
+        $merek->save();
 
         return response()->json([
             'status'  => 'success',
@@ -191,7 +192,7 @@ class SupplierController extends Controller
         $seacrh    = $request->search;
         $where  = (strlen($seacrh) > 0) ? " AND A.nama LIKE '%$seacrh%' OR A.created_by LIKE '%$seacrh%'" : "";
         $sql = "(SELECT *
-                    FROM  suppliers AS A
+                    FROM  mereks AS A
                     WHERE A.trashed=0
                     $where 
                 ) AS A1";
