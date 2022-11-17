@@ -1,8 +1,8 @@
 <div class="modal-content">
-    <form id="form-action"
-        action="{{$supplier->id ? route('supplier.update', $supplier->id) : route('supplier.store')}}" method="post">
+    <form id="form-action" action="{{$barang->id ? route('barang.update', $barang->id) : route('barang.store')}}"
+        method="post">
         @csrf
-        @if ($supplier->id)
+        @if ($barang->id)
         @method('put')
         @endif
         <div class="modal-header">
@@ -14,10 +14,31 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama</label>
-                        <input type="text" value="{{$supplier->nama}}" placeholder="Masukan nama supplier" name="nama"
+                        <input type="text" value="{{$barang->nama}}" placeholder="Masukan nama barang" name="nama"
                             class="form-control" id="nama">
                     </div>
                 </div>
+
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label for="harga" class="form-label">Harga</label>
+                        <input type="text" value="{{$barang->harga}}" placeholder="Masukan harga barang" name="harga"
+                            class="form-control" id="rupiah" onkeyup="hanya_angka(this)">
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label for="" class="text-label">Kategori</label>
+                        <select class="form-select" name="categori_id">
+                            <option value="">Pilih kategori</option>
+                            @foreach ($kategori as $id => $l)
+                            <option {{$barang->categori_id == $id ? "selected" : null}} value="{{$id}}">{{$l}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="modal-footer">

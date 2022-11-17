@@ -66,6 +66,7 @@
         <div class="modal-dialog modal-md"></div>
     </div>
 </div>
+
 @endsection
 
 @push('js')
@@ -158,7 +159,7 @@
     $('.btn-add').on('click', function(){
         $.ajax({
             method: "get",
-            url: `{{url('inventory/supplier/create')}}`,
+            url: `{{url('inventory/barang/create')}}`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();
@@ -216,6 +217,31 @@
         })
     })
 
+    function hanya_angka(data,urut='')
+	{
+		var isi   = data.value;
+		var isi2  = $(this);
+		let hasil = format_number(isi);
+		$(data).val(hasil);
+    }
     
+    function format_number(number, prefix, thousand_separator, decimal_separator)
+    {
+        var thousand_separator = thousand_separator || ',',
+            decimal_separator  = decimal_separator || '.',
+            regex              = new RegExp('[^' + decimal_separator + '\\d]', 'g'),
+            number_string      = number.replace(regex, '').toString(),
+            split              = number_string.split(decimal_separator),
+            rest               = split[0].length % 3,
+            result             = split[0].substr(0, rest),
+            thousands          = split[0].substr(rest).match(/\d{3}/g);
+
+        if (thousands) {
+            separator  = rest ? thousand_separator : '';
+            result    += separator + thousands.join(thousand_separator);
+        }
+        result = split[1] != undefined ? result + decimal_separator + split[1] : result;
+        return prefix == undefined ? result : (result ?  result  + prefix: '');
+    };
 </script>
 @endpush

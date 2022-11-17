@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangs;
+use App\Models\Kategoris;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +32,12 @@ class BarangController extends Controller
      */
     public function create()
     {
-        //
+        $modal_title = "Tambah Data";
+        $tombol = "Tambah";
+        $barang = new Barangs();
+        $kategori = Kategoris::where('trashed', 0)->pluck('nama', 'id');
+
+        return view('barang.barang-action', compact('modal_title', 'tombol', 'kategori', 'barang'));
     }
 
     /**
