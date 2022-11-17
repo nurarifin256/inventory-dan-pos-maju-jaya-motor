@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BarangRequest;
 use App\Models\Barangs;
 use App\Models\Kategoris;
 use Illuminate\Http\Request;
@@ -32,6 +33,10 @@ class BarangController extends Controller
      */
     public function create()
     {
+        if (cekAkses(Auth::user()->id, "Barang", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
         $modal_title = "Tambah Data";
         $tombol = "Tambah";
         $barang = new Barangs();
@@ -46,9 +51,26 @@ class BarangController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BarangRequest $request, Barangs $barang)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $harga     = $request->harga;
+        $harga_set = str_replace(',', '', $harga);
+
+        $barang->nama        = $request->nama;
+        $barang->harga       = $harga_set;
+        $barang->categori_id = $request->categori_id;
+        $barang->created_by  = Auth::user()->name;
+        $barang->updated_by  = Auth::user()->name;
+        $barang->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di tambah'
+        ]);
     }
 
     /**
@@ -91,9 +113,20 @@ class BarangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Barangs $barang)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $barang->trashed = 1;
+        $barang->updated_by = Auth::user()->name;
+        $barang->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di hapus'
+        ]);
     }
 
     function data_list(Request $req)
@@ -118,7 +151,7 @@ class BarangController extends Controller
             $row[] = $no;
             $row[] = $field->nama_barang;
             $row[] = $field->nama_kategori;
-            $row[] = $field->harga;
+            $row[] = number_format($field->harga);
             $row[] = $field->created_at;
             $row[] = $field->created_by;
             $row[] = $btn;

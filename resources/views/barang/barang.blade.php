@@ -168,7 +168,7 @@
         })
     })
 
-    $("#table-supplier").on('click', '.action', function(){
+    $("#table-barang").on('click', '.action', function(){
         let data  = $(this).data();
         let id    = data.id;
         let jenis = data.jenis;
@@ -186,7 +186,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "delete",
-                        url: `{{url('inventory/supplier')}}/${id}`,
+                        url: `{{url('inventory/barang')}}/${id}`,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                                 "content"
