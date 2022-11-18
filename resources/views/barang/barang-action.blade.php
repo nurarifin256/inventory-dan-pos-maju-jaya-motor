@@ -22,8 +22,9 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="text" value="{{$barang->harga}}" placeholder="Masukan harga barang" name="harga"
-                            class="form-control" id="rupiah" onkeyup="hanya_angka(this)">
+                        <input type="text" value="{{ number_format($barang->harga) }}"
+                            placeholder="Masukan harga barang" name="harga" class="form-control" id="rupiah"
+                            onkeyup="hanya_angka(this)">
                     </div>
                 </div>
 
@@ -32,8 +33,8 @@
                         <label for="" class="text-label">Kategori</label>
                         <select class="form-select" name="categori_id">
                             <option value="">Pilih kategori</option>
-                            @foreach ($kategori as $id => $l)
-                            <option {{$barang->categori_id == $id ? "selected" : null}} value="{{$id}}">{{$l}}</option>
+                            @foreach ($kategori as $id => $k)
+                            <option {{$barang->categori_id == $id ? "selected" : null}} value="{{$id}}">{{$k}}</option>
                             @endforeach
                         </select>
                     </div>

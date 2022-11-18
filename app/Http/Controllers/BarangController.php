@@ -90,9 +90,17 @@ class BarangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Barangs $barang)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $modal_title = "Ubah Data";
+        $tombol      = "ubah";
+        $kategori    = Kategoris::where('trashed', 0)->pluck('nama', 'id');
+
+        return view('barang.barang-action', compact('modal_title', 'tombol', 'barang', 'kategori'));
     }
 
     /**
@@ -102,9 +110,25 @@ class BarangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Barangs $barang)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $harga = $request->harga;
+        $harga_set = str_replace(',', '', $harga);
+
+        $barang->nama        = $request->nama;
+        $barang->harga       = $harga_set;
+        $barang->categori_id = $request->categori_id;
+        $barang->updated_by  = Auth::user()->name;
+        $barang->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di ubah'
+        ]);
     }
 
     /**

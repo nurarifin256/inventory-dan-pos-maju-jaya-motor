@@ -208,7 +208,7 @@
 
         $.ajax({
             method: "get",
-            url: `{{url('inventory/supplier')}}/${id}/edit`,
+            url: `{{url('inventory/barang')}}/${id}/edit`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();
