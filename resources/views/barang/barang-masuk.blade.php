@@ -22,9 +22,10 @@
                         <div class="row justify-content-between">
                             <div class="col-md-3">
                                 @if (cekAkses(Auth::user()->id, "Barang Masuk", "tambah") == TRUE)
-                                <button type="button" class="btn btn-primary mb-3 btn-add">
+                                <a href="{{url('transaksi/barang_masuk/create')}}" type="button"
+                                    class="btn btn-primary mb-3">
                                     Tambah Data
-                                </button>
+                                </a>
                                 @endif
                             </div>
                             <div class="offset-md-4 col-md-3">
@@ -45,6 +46,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nomor Barang Masuk</th>
+                                        <th>Supplier</th>
                                         <th>Tanggal Di Buat</th>
                                         <th>Di Buat</th>
                                         <th>Aksi</th>
@@ -153,18 +155,6 @@
             });
         });
     }
-
-    $('.btn-add').on('click', function(){
-        $.ajax({
-            method: "get",
-            url: `{{url('inventory/barang/create')}}`,
-            success: function(res){
-                $("#modalAction").find(".modal-dialog").html(res);
-                modal.show();
-                store();
-            }
-        })
-    })
 
     $("#table-barang").on('click', '.action', function(){
         let data  = $(this).data();

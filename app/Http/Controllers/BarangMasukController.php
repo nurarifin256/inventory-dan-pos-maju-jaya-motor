@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangs;
+use App\Models\Mereks;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +33,15 @@ class BarangMasukController extends Controller
      */
     public function create()
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang Masuk", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $title     = "Tambah Barang Masuk";
+        $suppliers = Supplier::where('trashed', 0)->pluck('nama', 'id');
+        $barangs   = Barangs::where('trashed', 0)->pluck('nama', 'id');
+        $mereks    = Mereks::where('trashed', 0)->pluck('nama', 'id');
+        return view('barang.tambah-barang-masuk', compact('title', 'suppliers', 'barangs', 'mereks'));
     }
 
     /**
