@@ -9,19 +9,19 @@
 @section('content')
 <div class="main-content">
     <div class="title">
-        Inventory
+        Transaksi
     </div>
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Supplier Barang</h4>
+                        <h4>Barang Masuk</h4>
                     </div>
                     <div class="card-body">
                         <div class="row justify-content-between">
                             <div class="col-md-3">
-                                @if (cekAkses(Auth::user()->id, "Supplier", "tambah") == TRUE)
+                                @if (cekAkses(Auth::user()->id, "Barang Masuk", "tambah") == TRUE)
                                 <button type="button" class="btn btn-primary mb-3 btn-add">
                                     Tambah Data
                                 </button>
@@ -40,12 +40,11 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table id="table-supplier" class="table table-striped">
+                            <table id="table-barang" class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Kode Supplier</th>
+                                        <th>Nomor Barang Masuk</th>
                                         <th>Tanggal Di Buat</th>
                                         <th>Di Buat</th>
                                         <th>Aksi</th>
@@ -65,6 +64,7 @@
         <div class="modal-dialog modal-md"></div>
     </div>
 </div>
+
 @endsection
 
 @push('js')
@@ -76,7 +76,7 @@
 <script>
     const modal = new bootstrap.Modal($("#modalAction"));
     var table;
-    table = $('#table-supplier').DataTable({
+    table = $('#table-barang').DataTable({
         'processing': true,
         'serverSide': true,
         'responsive': true,
@@ -90,7 +90,7 @@
         },
         "order"       : [],
         "ajax"        : {
-            "url" : "{{url('inventory/supplier/data_list')}}",
+            "url" : "{{url('transaksi/barang_masuk/data_list')}}",
             "type": "POST",
             "headers": {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -157,7 +157,7 @@
     $('.btn-add').on('click', function(){
         $.ajax({
             method: "get",
-            url: `{{url('inventory/supplier/create')}}`,
+            url: `{{url('inventory/barang/create')}}`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();
@@ -166,7 +166,7 @@
         })
     })
 
-    $("#table-supplier").on('click', '.action', function(){
+    $("#table-barang").on('click', '.action', function(){
         let data  = $(this).data();
         let id    = data.id;
         let jenis = data.jenis;
@@ -184,7 +184,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "delete",
-                        url: `{{url('inventory/supplier')}}/${id}`,
+                        url: `{{url('inventory/barang')}}/${id}`,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                                 "content"
@@ -206,7 +206,7 @@
 
         $.ajax({
             method: "get",
-            url: `{{url('inventory/supplier')}}/${id}/edit`,
+            url: `{{url('inventory/barang')}}/${id}/edit`,
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();
@@ -215,6 +215,31 @@
         })
     })
 
+    function hanya_angka(data,urut='')
+	{
+		var isi   = data.value;
+		var isi2  = $(this);
+		let hasil = format_number(isi);
+		$(data).val(hasil);
+    }
     
+    function format_number(number, prefix, thousand_separator, decimal_separator)
+    {
+        var thousand_separator = thousand_separator || ',',
+            decimal_separator  = decimal_separator || '.',
+            regex              = new RegExp('[^' + decimal_separator + '\\d]', 'g'),
+            number_string      = number.replace(regex, '').toString(),
+            split              = number_string.split(decimal_separator),
+            rest               = split[0].length % 3,
+            result             = split[0].substr(0, rest),
+            thousands          = split[0].substr(rest).match(/\d{3}/g);
+
+        if (thousands) {
+            separator  = rest ? thousand_separator : '';
+            result    += separator + thousands.join(thousand_separator);
+        }
+        result = split[1] != undefined ? result + decimal_separator + split[1] : result;
+        return prefix == undefined ? result : (result ?  result  + prefix: '');
+    };
 </script>
 @endpush

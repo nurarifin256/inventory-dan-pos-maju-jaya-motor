@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
@@ -76,4 +77,8 @@ Route::middleware('auth')->group(function () {
     // route barang
     Route::resource('inventory/barang', BarangController::class);
     Route::post('inventory/barang/data_list', [BarangController::class, 'data_list']);
+
+    // route barang masuk
+    Route::resource('transaksi/barang_masuk', BarangMasukController::class);
+    Route::post('transaksi/barang_masuk/data_list', [BarangMasukController::class, 'data_list']);
 });

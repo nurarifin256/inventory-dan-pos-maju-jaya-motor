@@ -53,9 +53,10 @@ class SupplierController extends Controller
             abort(403, 'unauthorized');
         }
 
-        $supplier->nama       = $request->nama;
-        $supplier->created_by = Auth::user()->name;
-        $supplier->updated_by = Auth::user()->name;
+        $supplier->nama          = $request->nama;
+        $supplier->kode_supplier = $request->kode_supplier;
+        $supplier->created_by    = Auth::user()->name;
+        $supplier->updated_by    = Auth::user()->name;
         $supplier->save();
 
         return response()->json([
@@ -106,8 +107,9 @@ class SupplierController extends Controller
             abort(403, 'unauthorized');
         }
 
-        $supplier->nama       = $request->nama;
-        $supplier->updated_by = Auth::user()->name;
+        $supplier->nama          = $request->nama;
+        $supplier->kode_supplier = $request->kode_supplier;
+        $supplier->updated_by    = Auth::user()->name;
         $supplier->save();
 
         return response()->json([
@@ -159,6 +161,7 @@ class SupplierController extends Controller
             $row   = array();
             $row[] = $no;
             $row[] = $field->nama;
+            $row[] = $field->kode_supplier;
             $row[] = $field->created_at;
             $row[] = $field->created_by;
             $row[] = $btn;

@@ -19,6 +19,16 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label for="kode_supplier" class="form-label">Kode Supplier</label>
+                        <input type="text" value="{{$supplier->kode_supplier}}" placeholder="Masukan kode supplier"
+                            name="kode_supplier" class="form-control" id="kode_supplier">
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
