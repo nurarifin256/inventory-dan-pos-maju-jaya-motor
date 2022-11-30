@@ -170,4 +170,28 @@ class BarangMasukController extends Controller
         $query = $query->get();
         return $query->count();
     }
+
+    public function get_duplicate(Request $request)
+    {
+        $barang_id = $request->barang_id;
+        // $merek_id  = $request->merek_id;
+
+        foreach ($barang_id as $key => $value) {
+            if (!empty($barang_id[$key])) {
+                $cek[] = $barang_id[$key];
+            }
+        }
+
+        $cek_data = array_diff_assoc($cek, array_unique($cek));
+
+        if ($cek_data) {
+            $hasil = "ada";
+        } else {
+            $hasil = "tidak ada";
+        }
+
+        return response()->json([
+            'status'  => $hasil,
+        ]);
+    }
 }

@@ -81,4 +81,5 @@ Route::middleware('auth')->group(function () {
     // route barang masuk
     Route::resource('transaksi/barang_masuk', BarangMasukController::class);
     Route::post('transaksi/barang_masuk/data_list', [BarangMasukController::class, 'data_list']);
+    Route::post('transaksi/barang_masuk/get_duplicate', [BarangMasukController::class, 'get_duplicate']);
 });
