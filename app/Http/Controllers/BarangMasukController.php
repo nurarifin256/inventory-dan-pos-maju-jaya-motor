@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang_masuk_details;
+use App\Models\Barang_masuks;
 use App\Models\Barangs;
 use App\Models\Mereks;
 use App\Models\Supplier;
@@ -50,9 +52,45 @@ class BarangMasukController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Barang_masuks $barang_masuks)
     {
-        //
+        $tanggal = date("d/m/y");
+        $get_number = Barang_masuks::get_number($tanggal);
+
+        if ($get_number != null) {
+            $nomor = $get_number->no_barang_masuk;
+            $nomor2 = explode("/", $nomor);
+            $no = $nomor2[3] + 1;
+        } else {
+            $no = 1;
+        }
+
+        $barang_masuks->supplier_id     = $request->supplier_id;
+        $barang_masuks->no_barang_masuk = $tanggal . '/' . $no;
+        $barang_masuks->created_by      = Auth::user()->name;
+        $barang_masuks->updated_by      = Auth::user()->name;
+        $barang_masuks->save();
+        $last_id = $barang_masuks->id;
+
+        $barangs = $request->barang_id;
+        $merek  = $request->merek_id;
+        $qty    = $request->qty;
+
+        foreach ($barangs as $key => $value) {
+            $data = [
+                [
+                    'barang_masuk_id' => $last_id,
+                    'barang_id'       => $value,
+                    'merek_id'        => $merek[$key],
+                    'qty'             => $qty[$key],
+                    'created_by'      => Auth::user()->name,
+                    'updated_by'      => Auth::user()->name,
+                ]
+            ];
+            Barang_masuk_details::insert($data);
+        }
+
+        return redirect('transaksi/barang_masuk');
     }
 
     /**
@@ -175,6 +213,7 @@ class BarangMasukController extends Controller
     {
         $barang_id = $request->barang_id;
         // $merek_id  = $request->merek_id;
+
 
         foreach ($barang_id as $key => $value) {
             if (!empty($barang_id[$key])) {

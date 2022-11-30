@@ -23,7 +23,7 @@
                         <div class="card-body">
                             <div class="mb-3 row">
                                 <label for="supplier_id" class="col-sm-2 col-form-label">Supplier</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <select class="form-select" name="supplier_id">
                                         <option value="">Pilih Supplier</option>
                                         @foreach ($suppliers as $id => $nama)
@@ -113,6 +113,9 @@
                                     </tr>
                                 </template> --}}
                             </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -162,27 +165,25 @@
 
     function getDuplicate() {
         $.ajax({
-                method: "post",
-                url: "{{url('transaksi/barang_masuk/get_duplicate')}}",
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                },
-                data: $("#form_barang_masuk").serialize(),
-                success: function (res) {
-                    if (res.status == "ada") {
-                        iziToast.warning({
-                            title: 'Peringatan',
-                            message: 'Item sudah di input',
-                            position: 'topRight'
-                        });
-                    }
-                },
-            });
+            method: "post",
+            url: "{{url('transaksi/barang_masuk/get_duplicate')}}",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            data: $("#form_barang_masuk").serialize(),
+            success: function (res) {
+                if (res.status == "ada") {
+                    iziToast.warning({
+                        title: 'Peringatan',
+                        message: 'Item sudah di input',
+                        position: 'topRight'
+                    });
+                }
+            },
+        });
     }
-
-
 
 </script>
 @endpush
