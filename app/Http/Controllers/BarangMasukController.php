@@ -54,16 +54,24 @@ class BarangMasukController extends Controller
      */
     public function store(Request $request, Barang_masuks $barang_masuks)
     {
-        $tanggal = date("d/m/y");
+        if (cekAkses(Auth::user()->id, "Barang Masuk", "tambah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $tanggal    = date("d/m/y");
         $get_number = Barang_masuks::get_number($tanggal);
 
         if ($get_number != null) {
-            $nomor = $get_number->no_barang_masuk;
+            $nomor  = $get_number->no_barang_masuk;
             $nomor2 = explode("/", $nomor);
-            $no = $nomor2[3] + 1;
+            $no     = $nomor2[3] + 1;
         } else {
             $no = 1;
         }
+
+        $validated = $request->validate([
+            'supplier_id' => 'required',
+        ]);
 
         $barang_masuks->supplier_id     = $request->supplier_id;
         $barang_masuks->no_barang_masuk = $tanggal . '/' . $no;
@@ -73,8 +81,8 @@ class BarangMasukController extends Controller
         $last_id = $barang_masuks->id;
 
         $barangs = $request->barang_id;
-        $merek  = $request->merek_id;
-        $qty    = $request->qty;
+        $merek   = $request->merek_id;
+        $qty     = $request->qty;
 
         foreach ($barangs as $key => $value) {
             $data = [
@@ -89,7 +97,6 @@ class BarangMasukController extends Controller
             ];
             Barang_masuk_details::insert($data);
         }
-
         return redirect('transaksi/barang_masuk');
     }
 
@@ -112,7 +119,16 @@ class BarangMasukController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $title     = "Edit Barang Masuk";
+        $suppliers = Supplier::where('trashed', 0)->pluck('nama', 'id');
+        $barangs   = Barangs::where('trashed', 0)->pluck('nama', 'id');
+        $mereks    = Mereks::where('trashed', 0)->pluck('nama', 'id');
+        $barang_masuk_detail = Barang_masuk_details::where(['trashed' => 0, 'barang_masuk_id' => $id])->get();
+        return view('barang.tambah-barang-masuk', compact('title', 'suppliers', 'barangs', 'mereks', 'barang_masuk_detail'));
     }
 
     /**
@@ -133,9 +149,21 @@ class BarangMasukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Barang_masuks $barang_masuks, $id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang Masuk", "hapus") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $barang_masuks             = Barang_masuks::find($id);
+        $barang_masuks->trashed    = 1;
+        $barang_masuks->updated_by = Auth::user()->name;
+        $barang_masuks->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data berhasil di hapus'
+        ]);
     }
 
     function data_list(Request $req)
@@ -147,7 +175,7 @@ class BarangMasukController extends Controller
             $btn_edit = '';
             $btn_delete = '';
             if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") == TRUE) {
-                $btn_edit   = '<button type="button" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></button>';
+                $btn_edit   = '<a href="' . url("transaksi/barang_masuk/$field->id_barang_masuk/edit")  . '" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></a>';
             }
             if (cekAkses(Auth::user()->id, "Barang Masuk", "hapus") == TRUE) {
                 $btn_delete = '<button type="button" data-id=' . $field->id_barang_masuk . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';

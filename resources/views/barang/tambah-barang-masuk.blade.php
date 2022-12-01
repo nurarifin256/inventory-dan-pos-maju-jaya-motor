@@ -21,10 +21,11 @@
                     <form action="{{ route('barang_masuk.store') }}" method="POST" id="form_barang_masuk">
                         @csrf
                         <div class="card-body">
-                            <div class="mb-3 row">
+                            <div class="mb-2 row">
                                 <label for="supplier_id" class="col-sm-2 col-form-label">Supplier</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select" name="supplier_id">
+                                    <select class="form-select @error('supplier_id') is-invalid @enderror"
+                                        name="supplier_id">
                                         <option value="">Pilih Supplier</option>
                                         @foreach ($suppliers as $id => $nama)
                                         <option value="{{ $id }}">{{ $nama }}</option>
@@ -32,6 +33,14 @@
                                     </select>
                                 </div>
                             </div>
+                            @error('supplier_id')
+                            <div class="row mb-2">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-4">
+                                    <span class="text-danger">{{ $message }}</span>
+                                </div>
+                            </div>
+                            @enderror
                             <div class="mb-3">
                                 <button type="button" onclick="tambahBaris('tabel_barang_masuk')"
                                     class="btn btn-primary">Tambah Kolom</button>
@@ -56,7 +65,7 @@
                                                     id="flexCheckDefault">
                                             </td>
                                             <td>
-                                                <select class="form-select" name="barang_id[]">
+                                                <select class="form-select" name="barang_id[]" required>
                                                     <option value="">Pilih Barang</option>
                                                     @foreach ($barangs as $id => $nama)
                                                     <option value="{{ $id }}">{{ $nama }}</option>
@@ -65,7 +74,8 @@
                                             </td>
 
                                             <td>
-                                                <select class="form-select" name="merek_id[]" onchange="getDuplicate()">
+                                                <select class="form-select" name="merek_id[]" onchange="getDuplicate()"
+                                                    required>
                                                     <option value="">Pilih Merek</option>
                                                     @foreach ($mereks as $id => $nama)
                                                     <option value="{{ $id }}">{{ $nama }}</option>
@@ -75,43 +85,11 @@
 
                                             <td>
                                                 <input type="number" class="form-control" name="qty[]"
-                                                    autocomplete="off" placeholder="Masukan quantity">
+                                                    autocomplete="off" placeholder="Masukan quantity" required>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-
-                                {{-- <template id="templateBaris">
-                                    <tr>
-                                        <td>
-                                            <button type="button" id="btn-hapus" onclick="hapusBaris()"
-                                                class="btn btn-danger">Hapus</button>
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            <select class="form-select" name="barang_id[]">
-                                                <option value="">Pilih Barang</option>
-                                                @foreach ($barangs as $id => $nama)
-                                                <option value="{{ $id }}">{{ $nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-
-                                        <td>
-                                            <select class="form-select" name="merek_id[]">
-                                                <option value="">Pilih Merek</option>
-                                                @foreach ($mereks as $id => $nama)
-                                                <option value="{{ $id }}">{{ $nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-
-                                        <td>
-                                            <input type="number" class="form-control" name="qty[]" autocomplete="off"
-                                                placeholder="Masukan quantity">
-                                        </td>
-                                    </tr>
-                                </template> --}}
                             </div>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <button type="submit" class="btn btn-primary">Simpan</button>

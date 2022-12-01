@@ -112,50 +112,6 @@
         table.ajax.reload();
     });
 
-
-    function store() {
-        $("#form-action").on("submit", function (e) {
-            e.preventDefault();
-            const _form = this;
-            const formData = new FormData(_form);
-
-            const url = this.getAttribute('action')
-
-            $.ajax({
-                method: "post",
-                url,
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                },
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    table.ajax.reload();
-                    modal.hide();
-                    iziToast.success({
-                        title: 'OK',
-                        message: res.message,
-                        position: 'topRight'
-                    });
-                },
-                error: function (res) {
-                    let errors = res.responseJSON?.errors;
-                    $(_form).find(".text-danger.text-small").remove();
-                    if (errors) {
-                        for (const [key, value] of Object.entries(errors)) {
-                            $(`[name='${key}']`)
-                                .parent()
-                                .append(`<span class="text-danger text-small">${value}</span>`);
-                        }
-                    }
-                },
-            });
-        });
-    }
-
     $("#table-barang").on('click', '.action', function(){
         let data  = $(this).data();
         let id    = data.id;
@@ -174,7 +130,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "delete",
-                        url: `{{url('inventory/barang')}}/${id}`,
+                        url: `{{url('transaksi/barang_masuk')}}/${id}`,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                                 "content"
@@ -193,43 +149,6 @@
             })
             return;
         }
-
-        $.ajax({
-            method: "get",
-            url: `{{url('inventory/barang')}}/${id}/edit`,
-            success: function(res){
-                $("#modalAction").find(".modal-dialog").html(res);
-                modal.show();
-                store()
-            }
-        })
     })
-
-    function hanya_angka(data,urut='')
-	{
-		var isi   = data.value;
-		var isi2  = $(this);
-		let hasil = format_number(isi);
-		$(data).val(hasil);
-    }
-    
-    function format_number(number, prefix, thousand_separator, decimal_separator)
-    {
-        var thousand_separator = thousand_separator || ',',
-            decimal_separator  = decimal_separator || '.',
-            regex              = new RegExp('[^' + decimal_separator + '\\d]', 'g'),
-            number_string      = number.replace(regex, '').toString(),
-            split              = number_string.split(decimal_separator),
-            rest               = split[0].length % 3,
-            result             = split[0].substr(0, rest),
-            thousands          = split[0].substr(rest).match(/\d{3}/g);
-
-        if (thousands) {
-            separator  = rest ? thousand_separator : '';
-            result    += separator + thousands.join(thousand_separator);
-        }
-        result = split[1] != undefined ? result + decimal_separator + split[1] : result;
-        return prefix == undefined ? result : (result ?  result  + prefix: '');
-    };
 </script>
 @endpush
