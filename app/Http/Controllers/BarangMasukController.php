@@ -95,6 +95,7 @@ class BarangMasukController extends Controller
                     'updated_by'      => Auth::user()->name,
                 ]
             ];
+
             Barang_masuk_details::insert($data);
         }
         return redirect('transaksi/barang_masuk');
@@ -123,12 +124,13 @@ class BarangMasukController extends Controller
             abort(403, 'unauthorized');
         }
 
-        $title     = "Edit Barang Masuk";
-        $suppliers = Supplier::where('trashed', 0)->pluck('nama', 'id');
-        $barangs   = Barangs::where('trashed', 0)->pluck('nama', 'id');
-        $mereks    = Mereks::where('trashed', 0)->pluck('nama', 'id');
-        $barang_masuk_detail = Barang_masuk_details::where(['trashed' => 0, 'barang_masuk_id' => $id])->get();
-        return view('barang.tambah-barang-masuk', compact('title', 'suppliers', 'barangs', 'mereks', 'barang_masuk_detail'));
+        $title               = "Edit Barang Masuk";
+        $suppliers           = Supplier::where('trashed', 0)->pluck('nama', 'id');
+        $barangs             = Barangs::where('trashed', 0)->pluck('nama', 'id');
+        $mereks              = Mereks::where('trashed', 0)->pluck('nama', 'id');
+        $barang_masuk        = Barang_masuks::find($id);
+        $barang_masuk_details = Barang_masuk_details::where(['trashed' => 0, 'barang_masuk_id' => $id])->get();
+        return view('barang.edit-barang-masuk', compact('title', 'suppliers', 'barangs', 'mereks', 'barang_masuk', 'barang_masuk_details'));
     }
 
     /**
@@ -138,9 +140,33 @@ class BarangMasukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Barang_masuks $barang_masuks, $id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $barang_masuks              = Barang_masuks::find($id);
+        $barang_masuks->supplier_id = $request->supplier_id;
+        $barang_masuks->updated_by  = Auth::user()->name;
+        $barang_masuks->save();
+
+        $id_barang_masuk_detail = $request->id_barang_masuk_detail;
+        $barangs                = $request->barang_id;
+        $merek                  = $request->merek_id;
+        $qty                    = $request->qty;
+
+        foreach ($id_barang_masuk_detail as $key => $value) {
+            $data =
+                [
+                    'barang_id'  => $barangs[$key],
+                    'merek_id'   => $merek[$key],
+                    'qty'        => $qty[$key],
+                    'updated_by' => Auth::user()->name
+                ];
+            Barang_masuk_details::where('id', $value)->update($data);
+        }
+        return redirect('transaksi/barang_masuk');
     }
 
     /**
