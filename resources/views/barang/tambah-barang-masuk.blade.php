@@ -4,6 +4,7 @@
 <link href="{{asset('vendor/datatables.net-dt/css/jquery.dataTables.min.css')}}" rel="stylesheet" />
 <link href="{{asset('vendor/datatables.net-responsive-dt/css/responsive.dataTables.min.css')}}" rel="stylesheet" />
 <link href="{{asset('vendor/izitoast/dist/css/iziToast.min.css')}}" rel="stylesheet">
+<link href="{{asset('vendor/select2/dist/css/select2.min.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -24,7 +25,8 @@
                             <div class="mb-2 row">
                                 <label for="supplier_id" class="col-sm-2 col-form-label">Supplier</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select @error('supplier_id') is-invalid @enderror"
+                                    <select
+                                        class="select_dropdown form-select @error('supplier_id') is-invalid @enderror"
                                         name="supplier_id">
                                         <option value="">Pilih Supplier</option>
                                         @foreach ($suppliers as $id => $nama)
@@ -110,7 +112,12 @@
 <script src="{{asset('vendor/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('vendor/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
 <script src="{{asset('vendor/izitoast/dist/js/iziToast.min.js')}}"></script>
+<script src="{{asset('vendor/select2/dist/js/select2.min.js')}}"></script>
 <script>
+    $(document).ready(function () {
+        $('.select_dropdown').select2();
+    })
+
     function tambahBaris(tabel_barang){
         var tabel = document.getElementById("tabel_barang_masuk");
         var bacabaris = tabel.rows.length;
@@ -118,26 +125,34 @@
         var tambahbaris = tabel.insertRow(bacabaris);
 
         for(var i=0;i<bacakolom;i++){
-        var cellbaru = tambahbaris.insertCell(i);
-        var isicell = tabel.rows[1].cells[i].innerHTML;
-        cellbaru.innerHTML=isicell;
+            var cellbaru = tambahbaris.insertCell(i);
+            var isicell = tabel.rows[1].cells[i].innerHTML;
+            cellbaru.innerHTML=isicell;
         }
         return false;
     }
 
     function hapusBaris(tabel_barang_masuk){
         var table = document.getElementById("tabel_barang_masuk");
-        for (var rowi= table.rows.length; rowi--;) {
-            var row= table.rows[rowi];
-            var inputs= row.getElementsByTagName('input');
-            for (var inputi= inputs.length; inputi--;) {
-                var input= inputs[inputi];
-
-                if (input.type==='checkbox' && input.checked) {
-                    row.parentNode.removeChild(row);
-                    break;
+        const panjang = table.rows.length;
+        if (panjang > 2) {
+            for (var rowi= table.rows.length; rowi--;) {
+                var row= table.rows[rowi];
+                var inputs= row.getElementsByTagName('input');
+                for (var inputi= inputs.length; inputi--;) {
+                    var input= inputs[inputi];
+                    if (input.type==='checkbox' && input.checked) {
+                        row.parentNode.removeChild(row);
+                        break;
+                    }
                 }
             }
+        } else {
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Minimal harus ada satu baris',
+                position: 'topRight'
+            });
         }
     }
 

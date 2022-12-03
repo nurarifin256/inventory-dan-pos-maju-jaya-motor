@@ -52,7 +52,7 @@ class BarangMasukController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Barang_masuks $barang_masuks)
+    public function store(Request $request, Barang_masuks $barang_masuks, Barang_masuk_details $barang_masuk_detail)
     {
         if (cekAkses(Auth::user()->id, "Barang Masuk", "tambah") != TRUE) {
             abort(403, 'unauthorized');
@@ -158,6 +158,7 @@ class BarangMasukController extends Controller
         $merek                  = $request->merek_id;
         $qty                    = $request->qty;
 
+
         foreach ($id_barang_masuk_detail as $key => $value) {
             $data =
                 [
@@ -169,9 +170,12 @@ class BarangMasukController extends Controller
             Barang_masuk_details::where('id', $value)->update($data);
         }
 
+        $get_id_barang_masuk_detail = Barang_masuk_details::where('barang_masuk_id', $id)->pluck('id');
+        DB::table('barang_masuk_details')->whereNotIn('barang_id', $barangs)->orWhereNotIn('merek_id', $merek)->WhereIn('id', $get_id_barang_masuk_detail)->update(['trashed' => 1]);
+
         return redirect('transaksi/barang_masuk')->with([
             'message' => 'Data berhasil di ubah',
-        ]);;
+        ]);
     }
 
     /**

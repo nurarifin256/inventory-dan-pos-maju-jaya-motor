@@ -4,6 +4,7 @@
 <link href="{{asset('vendor/datatables.net-dt/css/jquery.dataTables.min.css')}}" rel="stylesheet" />
 <link href="{{asset('vendor/datatables.net-responsive-dt/css/responsive.dataTables.min.css')}}" rel="stylesheet" />
 <link href="{{asset('vendor/izitoast/dist/css/iziToast.min.css')}}" rel="stylesheet">
+<link href="{{asset('vendor/select2/dist/css/select2.min.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -26,7 +27,7 @@
                             <div class="mb-2 row">
                                 <label for="supplier_id" class="col-sm-2 col-form-label">Supplier</label>
                                 <div class="col-sm-4">
-                                    <select class="form-select" name="supplier_id">
+                                    <select class="form-select select_dropdown" name="supplier_id">
                                         @foreach ($suppliers as $id => $nama)
                                         <option {{$barang_masuk->supplier_id == $id ? "selected" :
                                             null}} value="{{ $id }}">{{ $nama }}</option>
@@ -106,7 +107,12 @@
 <script src="{{asset('vendor/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{asset('vendor/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
 <script src="{{asset('vendor/izitoast/dist/js/iziToast.min.js')}}"></script>
+<script src="{{asset('vendor/select2/dist/js/select2.min.js')}}"></script>
 <script>
+    $(document).ready(function () {
+        $('.select_dropdown').select2();
+    })
+
     function tambahBaris(tabel_barang){
         var tabel = document.getElementById("tabel_barang_masuk");
         var bacabaris = tabel.rows.length;

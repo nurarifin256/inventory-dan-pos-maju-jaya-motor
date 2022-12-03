@@ -18,6 +18,9 @@
 
                     @if (session()->has('message'))
                     <div class="flash-data" data-flashdata="{{session()->get('message')}}">
+                        <?php 
+                        session()->forget('message');
+                        ?>
                     </div>
                     @endif
 
@@ -166,6 +169,5 @@
             position: 'topRight'
         });
     }
-
 </script>
 @endpush
