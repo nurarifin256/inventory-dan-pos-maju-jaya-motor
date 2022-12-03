@@ -98,7 +98,9 @@ class BarangMasukController extends Controller
 
             Barang_masuk_details::insert($data);
         }
-        return redirect('transaksi/barang_masuk');
+        return redirect('transaksi/barang_masuk')->with([
+            'message' => 'Data berhasil di tambah',
+        ]);;
     }
 
     /**
@@ -166,7 +168,10 @@ class BarangMasukController extends Controller
                 ];
             Barang_masuk_details::where('id', $value)->update($data);
         }
-        return redirect('transaksi/barang_masuk');
+
+        return redirect('transaksi/barang_masuk')->with([
+            'message' => 'Data berhasil di ubah',
+        ]);;
     }
 
     /**
