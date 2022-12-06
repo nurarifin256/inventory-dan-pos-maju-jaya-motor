@@ -91,6 +91,7 @@ class BarangMasukController extends Controller
                     'barang_id'       => $value,
                     'merek_id'        => $merek[$key],
                     'qty'             => $qty[$key],
+                    'not_in'          => $value . '_' . $merek[$key],
                     'created_by'      => Auth::user()->name,
                     'updated_by'      => Auth::user()->name,
                 ]
@@ -100,7 +101,7 @@ class BarangMasukController extends Controller
         }
         return redirect('transaksi/barang_masuk')->with([
             'message' => 'Data berhasil di tambah',
-        ]);;
+        ]);
     }
 
     /**
@@ -142,7 +143,7 @@ class BarangMasukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Barang_masuks $barang_masuks, $id)
+    public function update(Request $request, Barang_masuks $barang_masuks, Barang_masuk_details $Barang_masuk_details, $id)
     {
         if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") != TRUE) {
             abort(403, 'unauthorized');
@@ -158,20 +159,30 @@ class BarangMasukController extends Controller
         $merek                  = $request->merek_id;
         $qty                    = $request->qty;
 
-
+        $where_not_in = [];
         foreach ($id_barang_masuk_detail as $key => $value) {
             $data =
                 [
                     'barang_id'  => $barangs[$key],
                     'merek_id'   => $merek[$key],
                     'qty'        => $qty[$key],
-                    'updated_by' => Auth::user()->name
+                    'not_in'     => $barangs[$key] . '_' . $merek[$key],
+                    'updated_by' => Auth::user()->name,
                 ];
             Barang_masuk_details::where('id', $value)->update($data);
+
+            $where_not_in[] = $barangs[$key] . '_' . $merek[$key];
         }
 
-        $get_id_barang_masuk_detail = Barang_masuk_details::where('barang_masuk_id', $id)->pluck('id');
-        DB::table('barang_masuk_details')->whereNotIn('barang_id', $barangs)->orWhereNotIn('merek_id', $merek)->WhereIn('id', $get_id_barang_masuk_detail)->update(['trashed' => 1]);
+        $datas = DB::table("barang_masuk_details AS A")
+            ->select(DB::raw("A.*, CONCAT(A.barang_id,'_',A.merek_id) AS WHERE_NOT_IN"))
+            ->whereRaw("A.barang_masuk_id=$id")
+            ->whereNotIn("A.not_in", $where_not_in)
+            ->get();
+
+        foreach ($datas as $data) {
+            DB::table('barang_masuk_details')->where('id', $data->id)->update(['trashed' => 1]);
+        }
 
         return redirect('transaksi/barang_masuk')->with([
             'message' => 'Data berhasil di ubah',
