@@ -159,25 +159,54 @@ class BarangMasukController extends Controller
         $merek                  = $request->merek_id;
         $qty                    = $request->qty;
 
-        $where_not_in = [];
-        foreach ($id_barang_masuk_detail as $key => $value) {
+        // $cek_datas = DB::table("barang_masuk_details")
+        //     ->where('barang_masuk_id', '=', $id)
+        //     ->get();
+
+        // foreach ($cek_datas as $values) {
+        $where_not_in2 = [];
+        foreach ($barangs as $key => $value) {
             $data =
                 [
-                    'barang_id'  => $barangs[$key],
-                    'merek_id'   => $merek[$key],
-                    'qty'        => $qty[$key],
-                    'not_in'     => $barangs[$key] . '_' . $merek[$key],
-                    'updated_by' => Auth::user()->name,
+                    'barang_masuk_id' => $id,
+                    'barang_id'       => $value,
+                    'merek_id'        => $merek[$key],
+                    'qty'             => $qty[$key],
+                    'not_in'          => $value . '_' . $merek[$key],
+                    'updated_by'      => Auth::user()->name,
                 ];
-            Barang_masuk_details::where('id', $value)->update($data);
+            Barang_masuk_details::where('id', $id_barang_masuk_detail[$key])->update($data);
+            $where_not_in2[] = $value . '_' . $merek[$key];
+            // if ($id_barang_masuk_detail[$key] != null) {
+            //     $ada = "ada";
+            // } else {
+            //     $ada = "tidak ada";
+            // }
+            // dd($ada);
 
-            $where_not_in[] = $barangs[$key] . '_' . $merek[$key];
+            // $id_barang_masuk_detail = $id_barang_masuk_detail[$key];
+
+            // $where_not_in = $value[$key] . '_' . $merek[$key];
+
+            // if ($values->id == $id_barang_masuk_detail) {
+            //     $cek = "ada";
+            // } else {
+            //     $cek = "tidak ada";
+            // }
+            // if (($values->not_in == $where_not_in) and ()) {
+            //     $cek = "ada";
+            // } else {
+            //     $cek = "tidak ada";
+            //     // Barang_masuk_details::insert($data)
+            // }
+            // dd($values->not_in, $where_not_in, $values->id, $id_barang_masuk_detail, $cek);
         }
+        // }
 
         $datas = DB::table("barang_masuk_details AS A")
             ->select(DB::raw("A.*, CONCAT(A.barang_id,'_',A.merek_id) AS WHERE_NOT_IN"))
             ->whereRaw("A.barang_masuk_id=$id")
-            ->whereNotIn("A.not_in", $where_not_in)
+            ->whereNotIn("A.not_in", $where_not_in2)
             ->get();
 
         foreach ($datas as $data) {

@@ -10,6 +10,7 @@ use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MerekController;
 use App\Http\Controllers\RakController;
+use App\Http\Controllers\StagingAreaController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,4 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('transaksi/barang_masuk', BarangMasukController::class);
     Route::post('transaksi/barang_masuk/data_list', [BarangMasukController::class, 'data_list']);
     Route::post('transaksi/barang_masuk/get_duplicate', [BarangMasukController::class, 'get_duplicate']);
+
+    // route staging area
+    Route::resource('transaksi/staging_area', StagingAreaController::class);
+    Route::post('transaksi/staging_area/data_list', [StagingAreaController::class, 'data_list']);
 });
