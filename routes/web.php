@@ -87,4 +87,5 @@ Route::middleware('auth')->group(function () {
     // route staging area
     Route::resource('transaksi/staging_area', StagingAreaController::class);
     Route::post('transaksi/staging_area/data_list', [StagingAreaController::class, 'data_list']);
+    Route::post('transaksi/staging_area/cek_locator', [StagingAreaController::class, 'cek_locator']);
 });

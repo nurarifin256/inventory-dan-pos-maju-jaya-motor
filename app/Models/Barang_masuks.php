@@ -17,6 +17,11 @@ class Barang_masuks extends Model
         return $this->hasMany(Barang_masuk_details::class);
     }
 
+    public function supplier()
+    {
+        return $this->hasOne(Supplier::class);
+    }
+
     static function get_number($tanggal)
     {
         $get_number = DB::table('barang_masuks')
@@ -26,5 +31,16 @@ class Barang_masuks extends Model
             ->first();
 
         return $get_number;
+    }
+
+    static function getBarangMasuk($id)
+    {
+        $barang_masuk = DB::table('barang_masuks AS A')
+            ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
+            ->select('A.no_barang_masuk', 'A.id', 'B.id', 'b.kode_supplier', 'b.nama')
+            ->where('A.id', '=', $id)
+            ->first();
+
+        return $barang_masuk;
     }
 }

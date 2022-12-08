@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang_masuks;
+use App\Models\Barang_masuk_details;
+use App\Models\Locators;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +52,11 @@ class StagingAreaController extends Controller
      */
     public function show($id)
     {
-        //
+        $title                = "Detail Staging Area";
+        $barang_masuk         = Barang_masuks::getBarangMasuk($id);
+        $barang_masuk_details = Barang_masuk_details::getDetails($id);
+        $locators             = Locators::getLocators();
+        return view('staging.staging-area-detail', compact('title', 'barang_masuk', 'barang_masuk_details', 'locators'));
     }
 
     /**
@@ -95,7 +102,7 @@ class StagingAreaController extends Controller
             $btn_edit = '';
             $btn_delete = '';
             if (cekAkses(Auth::user()->id, "Staging Area", "ubah") == TRUE) {
-                $btn_edit   = '<button type="button" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i> Detail</button>';
+                $btn_edit   = '<a href="' . url("transaksi/staging_area/$field->id")  . '" data-id=' . $field->id . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i> Detail</a>';
             }
 
             $btn        = $btn_edit . ' ' . $btn_delete;
@@ -154,5 +161,35 @@ class StagingAreaController extends Controller
         $query = $this->sql_list($req, $filter);
         $query = $query->get();
         return $query->count();
+    }
+
+    public function cek_locator(Request $request)
+    {
+        $barang_id              = $request->barang_id;
+        $merek_id               = $request->merek_id;
+        $locator_id             = $request->locator_id;
+        $barang_masuk_detail_id = $request->barang_masuk_detail_id;
+
+        $get_data = Barang_masuk_details::where('locator_id', $locator_id)->get('barang_id');
+
+        $get_data = DB::table('barang_masuk_details AS A')
+            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
+            ->select('A.id', 'B.nama AS nama_barang', 'A.barang_id')
+            ->where('A.locator_id', '=', $locator_id)
+            ->get();
+
+        $message = null;
+        $status  = 100;
+        foreach ($get_data as $value) {
+            if ($value->barang_id != $barang_id) {
+                $message = "locator ini sudah terisi oleh barang " . $value->nama_barang;
+                $status = 200;
+            }
+        }
+
+        return response()->json([
+            'status'  => $status,
+            'message' => $message
+        ]);
     }
 }

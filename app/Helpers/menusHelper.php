@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\IjinJabatans;
+use App\Models\Locators;
 use App\Models\Menus;
 use Illuminate\Support\Facades\DB;
 
@@ -38,6 +39,14 @@ if (!function_exists('getMenusSidebar')) {
 
         if ($checked != null) {
             return "checked='checked'";
+        }
+    }
+
+    function cek_locators($status)
+    {
+        $cek_locators = Locators::where('status', $status)->first();
+        if ($cek_locators != null) {
+            return true;
         }
     }
 }
