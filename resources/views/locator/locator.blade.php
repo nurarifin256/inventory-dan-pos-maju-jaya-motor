@@ -68,6 +68,7 @@
 
         </div>
     </div>
+
 </div>
 @endsection
 
@@ -215,6 +216,17 @@
                             });
                         },
                     });
+                }
+            })
+            return;
+        } else if (jenis == 'lihat'){
+
+            $.ajax({
+                method: "get",
+                url: `{{url('inventory/locator')}}/${id}`,
+                success: function(res){
+                    $("#modalAction").find(".modal-dialog").html(res);
+                    modal.show();
                 }
             })
             return;

@@ -28,4 +28,27 @@ class Barang_masuk_details extends Model
 
         return $barang_masuk_details;
     }
+
+    static function isi_locator($id)
+    {
+        $barang_masuk_details = DB::table('barang_masuk_details AS A')
+            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
+            ->join('mereks AS C', 'C.id', '=', 'A.merek_id')
+            ->select('A.id', 'B.nama AS nama_barang', 'C.nama AS nama_merek', 'A.qty', 'A.created_at')
+            ->where('A.locator_id', '=', $id)
+            ->get();
+
+        return $barang_masuk_details;
+    }
+
+    static function cek_locator($locator_id)
+    {
+        $get_data = DB::table('barang_masuk_details AS A')
+            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
+            ->select('A.id', 'B.nama AS nama_barang', 'A.barang_id')
+            ->where('A.locator_id', '=', $locator_id)
+            ->get();
+
+        return $get_data;
+    }
 }

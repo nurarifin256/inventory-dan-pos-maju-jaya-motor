@@ -18,9 +18,9 @@
 
                     @if (session()->has('message'))
                     <div class="flash-data" data-flashdata="{{session()->get('message')}}">
-                        <?php 
+                        @php
                         session()->forget('message');
-                        ?>
+                        @endphp
                     </div>
                     @endif
 

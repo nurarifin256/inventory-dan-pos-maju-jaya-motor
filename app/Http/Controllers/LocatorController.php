@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LocatorRequest;
+use App\Models\Barang_masuk_details;
 use App\Models\Levels;
 use App\Models\Locators;
 use App\Models\Racks;
@@ -92,9 +93,13 @@ class LocatorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Locators $locators)
+    public function show($id)
     {
-        dd($locators);
+        if (cekAkses(Auth::user()->id, "Locator", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+        $datas = Barang_masuk_details::isi_locator($id);
+        return view('locator.locator-fill', compact('datas'));
     }
 
     /**
@@ -196,6 +201,13 @@ class LocatorController extends Controller
                 $btn_delete = '<button type="button" data-id=' . $field->id_locators . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
             }
 
+            if (cek_isi($field->id_locators) != "") {
+                // $status = '<a href="' . url("")  . '" class="btn btn-primary btn-sm action"><i class="ti-eye"></i> Lihat</a>';;
+                $status = '<button type="button" data-id=' . $field->id_locators . ' data-jenis="lihat" class="btn btn-primary btn-sm action"><i class="ti-eye"></i> Lihat</button>';;
+            } else {
+                $status = "Kosong";
+            }
+
             $btn        = $btn_edit . ' ' . $btn_delete;
 
             $no++;
@@ -204,7 +216,7 @@ class LocatorController extends Controller
             $row[] = $field->no_rack;
             $row[] = $field->level;
             $row[] = $field->no_locator;
-            $row[] = $field->status == 0 ? "Kosong" : "Terisi";
+            $row[] = $status;
             $row[] = $field->created_at;
             $row[] = $field->created_by;
             $row[] = $btn;

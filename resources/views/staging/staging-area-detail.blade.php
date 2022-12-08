@@ -19,7 +19,7 @@
                     <div class="card-header">
                         <h4>Input ke locator</h4>
                     </div>
-                    <form action="{{ route('barang_masuk.update', $barang_masuk->id) }}" method="POST"
+                    <form action="{{ route('staging_area.update', $barang_masuk->id) }}" method="POST"
                         id="form_barang_masuk">
                         @csrf
                         @method('put')
@@ -69,7 +69,7 @@
 
                                             <td>
                                                 <select class="form-select select_dropdown" name="locators[]"
-                                                    onchange="cekLocator({{ $no }})" id="id_locator_{{ $no }}">
+                                                    onchange="cekLocator({{ $no }})" id="id_locator_{{ $no }}" required>
                                                     <option value="">Pilih Locator</option>
                                                     @foreach ($locators as $locator)
                                                     <option {{ $locator->id ==
@@ -111,9 +111,7 @@
 
     function cekLocator(no) {
         const barang_id              = $("#id_barang_"+no).val()
-        const merek_id               = $("#id_merek_"+no).val()
         const locator_id             = $("#id_locator_"+no).val()
-        const barang_masuk_detail_id = $("#id_barang_masuk_detail_"+no).val()
         const kolom = document.getElementById("id_locator_"+no)
 
         $.ajax({
@@ -125,7 +123,7 @@
                 ),
             },
             data: {
-                barang_id, merek_id, locator_id, barang_masuk_detail_id
+                barang_id, locator_id,
             },
             success: function (res) {
                 if (res.status == 200) {

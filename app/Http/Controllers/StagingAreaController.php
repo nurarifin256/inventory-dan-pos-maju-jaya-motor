@@ -79,7 +79,21 @@ class StagingAreaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $id_barang_masuk_detail = $request->id_barang_masuk_detail;
+        $locator_id             = $request->locators;
+
+        foreach ($id_barang_masuk_detail as $key => $value) {
+            $data = [
+                'locator_id' => $locator_id[$key],
+                'updated_by' => Auth::user()->name,
+            ];
+
+            Barang_masuk_details::where('id', $value)->update($data);
+        }
+
+        return redirect('transaksi/staging_area')->with([
+            'message' => 'Barang berhasil di masukan ke locator',
+        ]);
     }
 
     /**
@@ -166,18 +180,9 @@ class StagingAreaController extends Controller
     public function cek_locator(Request $request)
     {
         $barang_id              = $request->barang_id;
-        $merek_id               = $request->merek_id;
         $locator_id             = $request->locator_id;
-        $barang_masuk_detail_id = $request->barang_masuk_detail_id;
 
-        $get_data = Barang_masuk_details::where('locator_id', $locator_id)->get('barang_id');
-
-        $get_data = DB::table('barang_masuk_details AS A')
-            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
-            ->select('A.id', 'B.nama AS nama_barang', 'A.barang_id')
-            ->where('A.locator_id', '=', $locator_id)
-            ->get();
-
+        $get_data = Barang_masuk_details::cek_locator($locator_id);
         $message = null;
         $status  = 100;
         foreach ($get_data as $value) {

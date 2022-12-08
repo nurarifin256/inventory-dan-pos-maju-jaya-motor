@@ -15,6 +15,13 @@
         <div class="row same-height">
             <div class="col-md-12">
                 <div class="card">
+                    @if (session()->has('message'))
+                    <div class="flash-data" data-flashdata="{{session()->get('message')}}">
+                        @php
+                        session()->forget('message');
+                        @endphp
+                    </div>
+                    @endif
                     <div class="card-header">
                         <h4>Staging Area</h4>
                     </div>
@@ -210,6 +217,16 @@
             }
         })
     })
+
+    const flashData = $('.flash-data').data('flashdata');
+
+    if (flashData) {
+        iziToast.success({
+            title: 'OK',
+            message: flashData,
+            position: 'topRight'
+        });
+    }
 
     
 </script>

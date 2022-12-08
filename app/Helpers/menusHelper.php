@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Barang_masuk_details;
 use App\Models\IjinJabatans;
 use App\Models\Locators;
 use App\Models\Menus;
@@ -48,5 +49,11 @@ if (!function_exists('getMenusSidebar')) {
         if ($cek_locators != null) {
             return true;
         }
+    }
+
+    function cek_isi($id)
+    {
+        $cek_locators = Barang_masuk_details::where('locator_id', $id)->first();
+        return $cek_locators;
     }
 }
