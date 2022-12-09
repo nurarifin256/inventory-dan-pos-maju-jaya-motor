@@ -23,6 +23,21 @@ class Locators extends Model
         return $result;
     }
 
+    static function get_locator_for_stok($not_in)
+    {
+        $locators = DB::table('barang_masuk_details AS A')
+            ->join('locators AS B', 'B.id', '=', 'A.locator_id')
+            ->join('levels AS C', 'C.id', '=', 'B.level_id')
+            ->join('racks AS D', 'D.id', '=', 'B.rack_id')
+            ->join('barang_masuks AS E', 'E.id', '=', 'A.barang_masuk_id')
+            ->join('suppliers AS F', 'F.id', '=', 'E.supplier_id')
+            ->select('A.id', 'C.level', 'D.no AS no_rack', 'B.no AS no_locator', 'A.qty', 'A.created_at', 'F.nama AS nama_supplier')
+            ->where(['A.trashed' => 0, 'A.not_in' => $not_in])
+            ->get();
+
+        return $locators;
+    }
+
     static function getLocators()
     {
         $locators = DB::table('locators AS A')

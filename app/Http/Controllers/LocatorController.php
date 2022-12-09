@@ -95,7 +95,7 @@ class LocatorController extends Controller
      */
     public function show($id)
     {
-        if (cekAkses(Auth::user()->id, "Locator", "ubah") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Locator", "lihat") != TRUE) {
             abort(403, 'unauthorized');
         }
         $datas = Barang_masuk_details::isi_locator($id);
