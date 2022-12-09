@@ -11,6 +11,7 @@
                     <thead>
                         <tr>
                             <th>Tanggal Masuk</th>
+                            <th>Supplier</th>
                             <th>Barang</th>
                             <th>Merek</th>
                             <th>Qty</th>
@@ -20,6 +21,7 @@
                         @foreach ($datas as $data)
                         <tr>
                             <td>{{ $data->created_at }}</td>
+                            <td>{{ $data->nama_supplier }}</td>
                             <td>{{ $data->nama_barang }}</td>
                             <td>{{ $data->nama_merek }}</td>
                             <td>{{ $data->qty }}</td>
@@ -30,7 +32,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         </div>
     </form>
 </div>

@@ -69,6 +69,12 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalActionIsi" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel">
+        <div class="modal-dialog modal-lg">
+
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -81,6 +87,7 @@
 <script src="{{asset('vendor/select2/dist/js/select2.min.js')}}"></script>
 <script>
     const modal = new bootstrap.Modal($("#modalAction"));
+    const modalIsi = new bootstrap.Modal($("#modalActionIsi"));
     var table;
     
     table = $('#table-locator').DataTable({
@@ -225,8 +232,8 @@
                 method: "get",
                 url: `{{url('inventory/locator')}}/${id}`,
                 success: function(res){
-                    $("#modalAction").find(".modal-dialog").html(res);
-                    modal.show();
+                    $("#modalActionIsi").find(".modal-lg").html(res);
+                    modalIsi.show();
                 }
             })
             return;
@@ -243,6 +250,5 @@
         })
     })
 
-    
 </script>
 @endpush

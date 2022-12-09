@@ -77,7 +77,7 @@ class StagingAreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Barang_masuks $barang_masuks, $id)
     {
         $id_barang_masuk_detail = $request->id_barang_masuk_detail;
         $locator_id             = $request->locators;
@@ -87,9 +87,13 @@ class StagingAreaController extends Controller
                 'locator_id' => $locator_id[$key],
                 'updated_by' => Auth::user()->name,
             ];
-
             Barang_masuk_details::where('id', $value)->update($data);
         }
+
+        $barang_masuks             = barang_masuks::find($id);
+        $barang_masuks->status     = 1;
+        $barang_masuks->updated_by = Auth::user()->name;
+        $barang_masuks->save();
 
         return redirect('transaksi/staging_area')->with([
             'message' => 'Barang berhasil di masukan ke locator',

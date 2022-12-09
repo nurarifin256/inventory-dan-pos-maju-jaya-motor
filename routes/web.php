@@ -11,6 +11,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MerekController;
 use App\Http\Controllers\RakController;
 use App\Http\Controllers\StagingAreaController;
+use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,6 +75,10 @@ Route::middleware('auth')->group(function () {
     // route merek
     Route::resource('inventory/merek', MerekController::class);
     Route::post('inventory/merek/data_list', [MerekController::class, 'data_list']);
+
+    // route stok
+    Route::resource('inventory/stok', StokController::class);
+    Route::post('inventory/stok/data_list', [StokController::class, 'data_list']);
 
     // route barang
     Route::resource('inventory/barang', BarangController::class);

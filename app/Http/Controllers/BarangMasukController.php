@@ -9,6 +9,7 @@ use App\Models\Mereks;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 class BarangMasukController extends Controller
@@ -92,6 +93,7 @@ class BarangMasukController extends Controller
                     'merek_id'        => $merek[$key],
                     'qty'             => $qty[$key],
                     'not_in'          => $value . '_' . $merek[$key],
+                    'created_at'      => date("y-m-d H:i:s"),
                     'created_by'      => Auth::user()->name,
                     'updated_by'      => Auth::user()->name,
                 ]

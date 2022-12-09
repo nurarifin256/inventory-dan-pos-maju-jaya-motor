@@ -37,7 +37,7 @@ class Barang_masuks extends Model
     {
         $barang_masuk = DB::table('barang_masuks AS A')
             ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
-            ->select('A.no_barang_masuk', 'A.id', 'B.id', 'b.kode_supplier', 'b.nama')
+            ->select('A.no_barang_masuk', 'A.id', 'B.id AS id_supplier', 'b.kode_supplier', 'b.nama')
             ->where('A.id', '=', $id)
             ->first();
 
