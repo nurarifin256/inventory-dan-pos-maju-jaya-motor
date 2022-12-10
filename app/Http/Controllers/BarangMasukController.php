@@ -251,8 +251,10 @@ class BarangMasukController extends Controller
         foreach ($list as $field) {
             $btn_edit = '';
             $btn_delete = '';
-            if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") == TRUE) {
-                $btn_edit   = '<a href="' . url("transaksi/barang_masuk/$field->id_barang_masuk/edit")  . '" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></a>';
+            if ($field->status == 0) {
+                if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") == TRUE) {
+                    $btn_edit   = '<a href="' . url("transaksi/barang_masuk/$field->id_barang_masuk/edit")  . '" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></a>';
+                }
             }
             if (cekAkses(Auth::user()->id, "Barang Masuk", "hapus") == TRUE) {
                 $btn_delete = '<button type="button" data-id=' . $field->id_barang_masuk . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
@@ -296,7 +298,7 @@ class BarangMasukController extends Controller
     {
         $seacrh    = $request->search;
         $where  = (strlen($seacrh) > 0) ? " AND B.nama LIKE '%$seacrh%' OR A.created_by LIKE '%$seacrh%' OR A.no_barang_masuk LIKE '%$seacrh%'" : "";
-        $sql = "(SELECT A.id AS id_barang_masuk, A.no_barang_masuk, B.nama AS nama_supplier, A.created_by, A.created_at
+        $sql = "(SELECT A.id AS id_barang_masuk, A.no_barang_masuk, B.nama AS nama_supplier, A.created_by, A.created_at, A.status
                     FROM  barang_masuks AS A 
                     INNER JOIN suppliers AS B ON B.id=A.supplier_id
                     WHERE A.trashed=0

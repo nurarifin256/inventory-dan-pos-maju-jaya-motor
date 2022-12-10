@@ -9,6 +9,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MerekController;
+use App\Http\Controllers\PindahLocatorController;
 use App\Http\Controllers\RakController;
 use App\Http\Controllers\StagingAreaController;
 use App\Http\Controllers\StokController;
@@ -93,4 +94,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('transaksi/staging_area', StagingAreaController::class);
     Route::post('transaksi/staging_area/data_list', [StagingAreaController::class, 'data_list']);
     Route::post('transaksi/staging_area/cek_locator', [StagingAreaController::class, 'cek_locator']);
+
+    // route pindah locator
+    Route::resource('transaksi/pindah_locator', PindahLocatorController::class);
+    Route::post('transaksi/pindah_locator/data_list', [PindahLocatorController::class, 'data_list']);
 });
