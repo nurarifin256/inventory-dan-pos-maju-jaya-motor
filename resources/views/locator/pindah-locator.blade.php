@@ -58,7 +58,7 @@
     </div>
 
     <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg"></div>
+        <div class="modal-dialog modal-md"></div>
     </div>
 </div>
 @endsection

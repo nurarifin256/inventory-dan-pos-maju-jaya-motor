@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Locators;
+use App\Models\Barang_masuk_details;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +65,15 @@ class PindahLocatorController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Pindah Locator", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $locators = Locators::getLocatorSelected();
+        $locator  = Barang_masuk_details::find($id);
+
+        return view('locator.pindah-locator-action', compact('locators', 'locator'));
+        // return view('locator.pindah-locator-action');
     }
 
     /**
