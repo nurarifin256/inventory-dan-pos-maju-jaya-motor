@@ -11,7 +11,7 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="kode_supplier" class="form-label">Locator</label>
-                        <select class="form-select" name="locator_id">
+                        <select class="form-select" name="locator_id" id="locator_id" onchange="cekLocator()">
                             @foreach ($locators as $loc)
                             <option {{ $loc->id == $locator->locator_id ? "selected" : null}} value="{{ $loc->id }}">
                                 {{ $loc->no_rack }} - {{$loc->level }} - {{$loc->no_locator }}
@@ -21,6 +21,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" value="{{ $locator->barang_id }}" id="barang_id">
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

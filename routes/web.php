@@ -98,4 +98,5 @@ Route::middleware('auth')->group(function () {
     // route pindah locator
     Route::resource('transaksi/pindah_locator', PindahLocatorController::class);
     Route::post('transaksi/pindah_locator/data_list', [PindahLocatorController::class, 'data_list']);
+    Route::post('transaksi/pindah_locator/cek_locator', [PindahLocatorController::class, 'cek_locator']);
 });

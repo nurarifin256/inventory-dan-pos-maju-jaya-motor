@@ -163,6 +163,37 @@
             }
         })
     })
+
+    function cekLocator()
+    {
+        const barang_id  = $("#barang_id").val()
+        const locator_id = $("#locator_id").val()
+        const modall     = $('#modalAction');
+
+
+        $.ajax({
+            method: "post",
+            url: "{{url('transaksi/pindah_locator/cek_locator')}}",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            data: {
+                barang_id, locator_id,
+            },
+            success: function (res) {
+                if (res.status == 200) {
+                    iziToast.warning({
+                        title: 'Peringatan',
+                        message: res.message,
+                        position: 'topRight'
+                    });
+                    modall.modal('toggle');
+                }
+            },
+        });
+    }
     
 </script>
 @endpush

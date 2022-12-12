@@ -109,7 +109,7 @@
         $('.select_dropdown').select2();
     })
 
-    function cekLocator(no) {
+    function cekLocator(no) { 
         const barang_id              = $("#id_barang_"+no).val()
         const locator_id             = $("#id_locator_"+no).val()
         const kolom = document.getElementById("id_locator_"+no)

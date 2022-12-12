@@ -73,7 +73,6 @@ class PindahLocatorController extends Controller
         $locator  = Barang_masuk_details::find($id);
 
         return view('locator.pindah-locator-action', compact('locators', 'locator'));
-        // return view('locator.pindah-locator-action');
     }
 
     /**
@@ -170,5 +169,26 @@ class PindahLocatorController extends Controller
         $query = $this->sql_list($req, $filter);
         $query = $query->get();
         return $query->count();
+    }
+
+    public function cek_locator(Request $request)
+    {
+        $barang_id = $request->barang_id;
+        $locator_id = $request->locator_id;
+
+        $get_data = Barang_masuk_details::cek_locator($locator_id);
+        $message = null;
+        $status  = 100;
+        foreach ($get_data as $value) {
+            if ($value->barang_id != $barang_id) {
+                $message = "locator ini sudah terisi oleh barang " . $value->nama_barang;
+                $status = 200;
+            }
+        }
+
+        return response()->json([
+            'status'  => $status,
+            'message' => $message
+        ]);
     }
 }
