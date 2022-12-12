@@ -1,5 +1,5 @@
 <div class="modal-content">
-    <form id="form-action" action="{{ 'pindah_locator.update', $locator->id }}" method="post">
+    <form id="form-action" action="{{ route('pindah_locator.update', $locator->id) }}" method="post">
         @csrf
         @method('put')
         <div class="modal-header">

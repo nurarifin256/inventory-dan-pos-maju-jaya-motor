@@ -133,18 +133,7 @@
                         message: res.message,
                         position: 'topRight'
                     });
-                },
-                error: function (res) {
-                    let errors = res.responseJSON?.errors;
-                    $(_form).find(".text-danger.text-small").remove();
-                    if (errors) {
-                        for (const [key, value] of Object.entries(errors)) {
-                            $(`[name='${key}']`)
-                                .parent()
-                                .append(`<span class="text-danger text-small">${value}</span>`);
-                        }
-                    }
-                },
+                }
             });
         });
     }

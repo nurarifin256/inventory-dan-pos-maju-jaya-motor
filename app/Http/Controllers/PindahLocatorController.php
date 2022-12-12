@@ -84,7 +84,17 @@ class PindahLocatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Pindah Locator", "ubah") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $barang_masuk_detail  = Barang_masuk_details::find($id);
+        $barang_masuk_detail->locator_id = $request->locator_id;
+        $barang_masuk_detail->save();
+
+        return response()->json([
+            'message' => "Data berhasil di ubah"
+        ]);
     }
 
     /**
