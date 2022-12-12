@@ -7,6 +7,8 @@ use App\Models\Barang_masuks;
 use App\Models\Barangs;
 use App\Models\Mereks;
 use App\Models\Supplier;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
@@ -114,7 +116,13 @@ class BarangMasukController extends Controller
      */
     public function show($id)
     {
-        //
+        if (cekAkses(Auth::user()->id, "Barang Masuk", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $barang_masuk = Barang_masuks::getBarangMasuk($id);
+        $barang_masuk_details = Barang_masuk_details::get_details_for_print($id);
+        return view('barang.detail-barang-masuk', compact('barang_masuk', 'barang_masuk_details'));
     }
 
     /**
@@ -255,6 +263,10 @@ class BarangMasukController extends Controller
                 if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") == TRUE) {
                     $btn_edit   = '<a href="' . url("transaksi/barang_masuk/$field->id_barang_masuk/edit")  . '" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></a>';
                 }
+            } else {
+                if (cekAkses(Auth::user()->id, "Barang Masuk", "lihat") == TRUE) {
+                    $btn_edit   = '<button type="button" data-id=' . $field->id_barang_masuk . ' data-jenis="lihat" class="btn btn-info btn-sm action"><i class="ti-eye"></i></button>';
+                }
             }
             if (cekAkses(Auth::user()->id, "Barang Masuk", "hapus") == TRUE) {
                 $btn_delete = '<button type="button" data-id=' . $field->id_barang_masuk . ' data-jenis="delete" class="btn btn-danger btn-sm action"><i class="ti-trash"></i></button>';
@@ -339,5 +351,15 @@ class BarangMasukController extends Controller
         return response()->json([
             'status'  => $hasil,
         ]);
+    }
+
+    public function print($id)
+    {
+        $barang_masuk_details = Barang_masuk_details::get_detail_for_print($id);
+
+        $pdf = Pdf::loadView('print-locator', ['barang_masuk_details' => $barang_masuk_details]);
+        $pdf->setBasePath(public_path());
+        $pdf->setPaper('A5', 'potrait');
+        return $pdf->stream();
     }
 }

@@ -74,6 +74,10 @@
     <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md"></div>
     </div>
+
+    <div class="modal fade" id="modalAction2" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg"></div>
+    </div>
 </div>
 
 @endsection
@@ -86,6 +90,7 @@
 <script src="{{asset('vendor/izitoast/dist/js/iziToast.min.js')}}"></script>
 <script>
     const modal = new bootstrap.Modal($("#modalAction"));
+    const modal2 = new bootstrap.Modal($("#modalAction2"));
     var table;
     table = $('#table-barang').DataTable({
         'processing': true,
@@ -158,6 +163,22 @@
             })
             return;
         }
+
+        $.ajax({
+            method: "get",
+            url: `{{url('transaksi/barang_masuk')}}/${id}`,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            success: function (res) {
+                $("#modalAction2").find(".modal-dialog").html(res);
+                modal2.show();
+            },
+        });
+
+
     })
 
     const flashData = $('.flash-data').data('flashdata');

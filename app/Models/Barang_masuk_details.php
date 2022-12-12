@@ -29,6 +29,36 @@ class Barang_masuk_details extends Model
         return $barang_masuk_details;
     }
 
+    static function get_details_for_print($id)
+    {
+        $barang_masuk_details = DB::table('barang_masuk_details AS A')
+            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
+            ->join('mereks AS C', 'C.id', '=', 'A.merek_id')
+            ->join('locators AS D', 'D.id', '=', 'A.locator_id')
+            ->join('levels AS E', 'E.id', '=', 'D.level_id')
+            ->join('racks AS F', 'F.id', '=', 'D.rack_id')
+            ->select('A.id', 'B.nama AS nama_barang', 'C.nama AS nama_merek', 'A.qty', 'A.barang_id', 'A.merek_id', 'E.level', 'F.no AS no_rack', 'D.no AS no_locator', 'A.locator_id')
+            ->where('A.barang_masuk_id', '=', $id)
+            ->get();
+
+        return $barang_masuk_details;
+    }
+
+    static function get_detail_for_print($id)
+    {
+        $barang_masuk_details = DB::table('barang_masuk_details AS A')
+            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
+            ->join('mereks AS C', 'C.id', '=', 'A.merek_id')
+            ->join('locators AS D', 'D.id', '=', 'A.locator_id')
+            ->join('levels AS E', 'E.id', '=', 'D.level_id')
+            ->join('racks AS F', 'F.id', '=', 'D.rack_id')
+            ->select('A.id', 'B.nama AS nama_barang', 'C.nama AS nama_merek', 'A.qty', 'A.barang_id', 'A.merek_id', 'E.level', 'F.no AS no_rack', 'D.no AS no_locator', 'A.locator_id')
+            ->where('A.id', '=', $id)
+            ->first();
+
+        return $barang_masuk_details;
+    }
+
     static function isi_locator($id)
     {
         $barang_masuk_details = DB::table('barang_masuk_details AS A')

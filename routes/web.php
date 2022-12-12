@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::post('inventory/barang/data_list', [BarangController::class, 'data_list']);
 
     // route barang masuk
+    Route::get('transaksi/barang_masuk/{id}/print', [BarangMasukController::class, 'print']);
     Route::resource('transaksi/barang_masuk', BarangMasukController::class);
     Route::post('transaksi/barang_masuk/data_list', [BarangMasukController::class, 'data_list']);
     Route::post('transaksi/barang_masuk/get_duplicate', [BarangMasukController::class, 'get_duplicate']);
