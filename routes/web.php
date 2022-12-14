@@ -5,6 +5,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\Laporan\LaporanBarangMasukController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\MenuController;
@@ -100,4 +101,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('transaksi/pindah_locator', PindahLocatorController::class);
     Route::post('transaksi/pindah_locator/data_list', [PindahLocatorController::class, 'data_list']);
     Route::post('transaksi/pindah_locator/cek_locator', [PindahLocatorController::class, 'cek_locator']);
+
+    // route laporan barang masuk
+    Route::resource('laporan/barang_masuk', LaporanBarangMasukController::class);
+    Route::post('laporan/barang_masuk/hasil', [LaporanBarangMasukController::class, 'hasil']);
 });

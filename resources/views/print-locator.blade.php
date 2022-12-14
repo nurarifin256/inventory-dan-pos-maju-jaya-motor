@@ -4,6 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
+    <title>Print Locator</title>
 </head>
 <style>
     #tabel {
@@ -12,7 +13,8 @@
 </style>
 
 <body>
-    <h1 class="text-center">{{ $barang_masuk_details->nama_barang }} - {{ $barang_masuk_details->nama_merek }}</h1>
+    <label>{{ date("Y-m-d") }}</label>
+    <h1 class="text-center mt-3">{{ $barang_masuk_details->nama_barang }} - {{ $barang_masuk_details->nama_merek }}</h1>
 
     <table class="table table-bordered" id="tabel">
         <tr>

@@ -356,10 +356,11 @@ class BarangMasukController extends Controller
     public function print($id)
     {
         $barang_masuk_details = Barang_masuk_details::get_detail_for_print($id);
+        $customPaper = array(0, 0, 567.00, 283.80);
 
         $pdf = Pdf::loadView('print-locator', ['barang_masuk_details' => $barang_masuk_details]);
         $pdf->setBasePath(public_path());
-        $pdf->setPaper('A5', 'potrait');
-        return $pdf->stream();
+        $pdf->setPaper($customPaper, 'landscape');
+        return $pdf->stream("Print Locator");
     }
 }
