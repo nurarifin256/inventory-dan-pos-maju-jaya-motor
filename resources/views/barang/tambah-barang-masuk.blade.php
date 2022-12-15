@@ -19,7 +19,7 @@
                     <div class="card-header">
                         <h4>Tambah Barang Masuk</h4>
                     </div>
-                    <form action="{{ route('barang_masuk.store') }}" method="POST" id="form_barang_masuk">
+                    <form action="{{ url('transaksi/barang_masuk') }}" method="POST" id="form_barang_masuk">
                         @csrf
                         <div class="card-body">
                             <div class="mb-2 row">

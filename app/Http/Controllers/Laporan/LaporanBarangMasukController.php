@@ -93,12 +93,9 @@ class LaporanBarangMasukController extends Controller
     public function hasil(Request $request)
     {
         $title      = "Hasil Laporan Barang Masuk";
-        $tgl_mulai  = $request->tgl_mulai;
-        $tgl_sampai = $request->tgl_sampai;
-
-        $datas = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
-        // dd($tgl_mulai);
-        dd($datas);
+        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai));
+        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai));
+        $datas      = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
         return view('laporan.hasil-laporan-barang-masuk', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
     }
 }
