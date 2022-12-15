@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Laporan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LaporanBarangMasukRequest;
 use App\Models\Laporans;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -90,12 +91,21 @@ class LaporanBarangMasukController extends Controller
         //
     }
 
-    public function hasil(Request $request)
+    public function hasil(LaporanBarangMasukRequest $request)
     {
         $title      = "Hasil Laporan Barang Masuk";
+
+        // $validated = $request->validate([
+        //     'tgl_mulai' => 'required',
+        //     'tgl_sampai' => 'required',
+        // ]);
+
         $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai));
         $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai));
         $datas      = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
+
+
+
         return view('laporan.hasil-laporan-barang-masuk', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
     }
 }

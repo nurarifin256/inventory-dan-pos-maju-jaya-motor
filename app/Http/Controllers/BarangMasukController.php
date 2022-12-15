@@ -261,7 +261,7 @@ class BarangMasukController extends Controller
             $btn_delete = '';
             if ($field->status == 0) {
                 if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") == TRUE) {
-                    $btn_edit   = '<a href="' . url("transaksi/barang_masuk/$field->id_barang_masuk/edit")  . '" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm action"><i class="ti-pencil"></i></a>';
+                    $btn_edit   = '<a href="' . url("transaksi/barang_masuk/$field->id_barang_masuk/edit")  . '" data-id=' . $field->id_barang_masuk . ' data-jenis="edit" class="btn btn-warning btn-sm"><i class="ti-pencil"></i></a>';
                 }
             } else {
                 if (cekAkses(Auth::user()->id, "Barang Masuk", "lihat") == TRUE) {

@@ -17,7 +17,7 @@ class Laporans extends Model
             ->join('mereks AS C', 'C.id', '=', 'A.merek_id')
             ->join('barang_masuks AS D', 'D.id', '=', 'A.barang_masuk_id')
             ->join('suppliers AS E', 'E.id', '=', 'D.supplier_id')
-            ->select('B.nama AS nama_barang', 'C.nama AS nama_merek', 'E.nama AS nama_supplier', 'A.qty', DB::raw('SUM(qty) as total_qty'))
+            ->select('B.nama AS nama_barang', 'C.nama AS nama_merek', 'A.not_in', 'E.nama AS nama_supplier', 'A.qty', DB::raw('SUM(qty) as total_qty'))
             ->where('D.status', '=', 1)
             ->whereBetween('D.created_at', [$tgl_mulai, $tgl_sampai])
             ->groupBy('A.not_in')

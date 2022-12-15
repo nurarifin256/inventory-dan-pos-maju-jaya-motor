@@ -25,24 +25,32 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="datepicker-icon" class="form-label">Tanggal Mulai</label>
-                                    <div class="input-group input-append date" data-date-format="dd-mm-yyyy">
+                                    <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">
                                         <input class="form-control" type="text" readonly="" autocomplete="off"
-                                            name="tgl_mulai">
+                                            name="tgl_mulai" id="tgl_mulai" value="{{ date('01-m-Y') }}"
+                                            onchange="validasiTanggal2()">
                                         <button class="btn btn-outline-secondary" type="button">
                                             <i class="far fa-calendar-alt"></i>
                                         </button>
                                     </div>
+                                    @error('tgl_mulai')
+                                    <span class="text-danger">{{$message}}</span>
+                                    @enderror
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="datepicker-icon" class="form-label">Tanggal Sampai</label>
-                                    <div class="input-group input-append date" data-date-format="dd-mm-yyyy">
+                                    <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">
                                         <input class="form-control" type="text" readonly="" autocomplete="off"
-                                            name="tgl_sampai">
+                                            name="tgl_sampai" id="tgl_sampai" value="{{ date('d-m-Y') }}"
+                                            onchange="validasiTanggal()">
                                         <button class="btn btn-outline-secondary" type="button">
                                             <i class="far fa-calendar-alt"></i>
                                         </button>
                                     </div>
+                                    @error('tgl_sampai')
+                                    <span class="text-danger">{{$message}}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -74,8 +82,36 @@
         todayHighlight: true,
         format: 'dd-mm-yyyy'
     }).on('changeDate', function (e) {
-        console.log(e.target.value);
+        // console.log(e.target.value);
     });
+
+    function validasiTanggal() {
+        const tgl_mulai  = $('#tgl_mulai').val()
+        const tgl_sampai = $('#tgl_sampai').val()
+
+        if (tgl_sampai < tgl_mulai) {
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Tanggal sampai tidak boleh melewati tanggal mulai',
+                position: 'topRight'
+            });
+            $('#tgl_sampai').val('')
+        }
+    }
+
+    function validasiTanggal2() {
+        const tgl_mulai  = $('#tgl_mulai').val()
+        const tgl_sampai = $('#tgl_sampai').val()
+
+        if (tgl_mulai > tgl_sampai) {
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Tanggal mulai tidak boleh melebihin tanggal sampai',
+                position: 'topRight'
+            });
+            $('#tgl_mulai').val('')
+        }
+    }
 
 </script>
 @endpush

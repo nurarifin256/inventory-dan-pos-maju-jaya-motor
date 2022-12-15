@@ -50,7 +50,12 @@
                                         <td>{{ $data->nama_barang }}</td>
                                         <td>{{ $data->nama_merek }}</td>
                                         <td>{{ $data->total_qty }}</td>
-                                        <td>detail</td>
+                                        <td>
+                                            <input type="hidden" id="not_in_{{ $no }}" value="{{ $data->not_in }}">
+                                            <button type="button" class="btn btn-sm btn-info"
+                                                onclick="detail_laporan({{ $no }})" id="detail_laporan"><i
+                                                    class="ti-eye"></i></button>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -61,7 +66,9 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg"></div>
+    </div>
 </div>
 @endsection
 
@@ -69,4 +76,28 @@
 <script src="{{asset('vendor/jquery/dist/jquery.min.js')}}"></script>
 <script src="{{asset('vendor/sweetalert2/dist/sweetalert2.all.min.js')}}"></script>
 <script src="{{asset('vendor/izitoast/dist/js/iziToast.min.js')}}"></script>
+<script>
+    const modal = new bootstrap.Modal($("#modalAction"));
+    function detail_laporan(no)
+    {
+        const not_in = $('#not_in_'+no).val()
+
+        $.ajax({
+            method: "post",
+            url: "{{url('transaksi/pindah_locator/cek_locator')}}",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            data: {
+                barang_id, locator_id,
+            },
+            success: function(res){
+                $("#modalAction").find(".modal-dialog").html(res);
+                modal.show();
+            }
+        });
+    }
+</script>
 @endpush
