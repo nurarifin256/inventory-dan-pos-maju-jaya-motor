@@ -81,18 +81,18 @@
     function detail_laporan(no)
     {
         const not_in = $('#not_in_'+no).val()
+        const tgl_mulai = "{{ $tgl_mulai }}"
+        const tgl_sampai = "{{ $tgl_sampai }}"
 
         $.ajax({
-            method: "post",
-            url: "{{url('transaksi/pindah_locator/cek_locator')}}",
+            method: "get",
+            url: `{{url('laporan/barang_masuk')}}/${not_in}`,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                     "content"
                 ),
             },
-            data: {
-                barang_id, locator_id,
-            },
+            data: {tgl_mulai, tgl_sampai},
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();

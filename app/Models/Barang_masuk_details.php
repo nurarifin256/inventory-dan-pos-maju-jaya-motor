@@ -83,4 +83,16 @@ class Barang_masuk_details extends Model
 
         return $get_data;
     }
+
+    static function get_by_not_ins($not_in, $tgl_mulai, $tgl_sampai)
+    {
+        $datas = DB::table('barang_masuk_details AS A')
+            ->join('barang_masuks AS B', 'B.id', '=', 'A.barang_masuk_id')
+            ->select('A.id', 'A.qty', 'B.created_at')
+            ->where(['A.not_in' => $not_in, 'B.trashed' => 0, 'B.status' => 1])
+            ->whereBetween('B.created_at', [$tgl_mulai, $tgl_sampai])
+            ->get();
+
+        return $datas;
+    }
 }
