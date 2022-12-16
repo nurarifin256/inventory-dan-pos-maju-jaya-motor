@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class LaporanBarangMasukSupplierRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules()
+    {
+        return [
+            'tgl_mulai_supplier'  => 'required',
+            'tgl_sampai_supplier' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'tgl_mulai_supplier.required'  => 'Tanggal mulai harus di pilih',
+            'tgl_sampai_supplier.required' => 'Tanggal sampai harus di pilih',
+        ];
+    }
+}

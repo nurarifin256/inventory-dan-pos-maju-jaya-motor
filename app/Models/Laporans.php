@@ -25,4 +25,18 @@ class Laporans extends Model
 
         return $datas;
     }
+
+    static function laporan_barang_masuk_supplier($tgl_mulai, $tgl_sampai)
+    {
+        $datas = DB::table('barang_masuks AS A')
+            ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
+            ->join('barang_masuk_details AS C', 'C.barang_masuk_id', '=', 'A.id')
+            ->select('B.nama AS nama_supplier', 'B.kode_supplier', DB::raw('count(A.supplier_id) as kirim, sum(C.qty) as total_qty'))
+            ->where('A.status', '=', 1)
+            ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
+            ->groupBy('A.supplier_id')
+            ->get();
+
+        return $datas;
+    }
 }

@@ -106,4 +106,5 @@ Route::middleware('auth')->group(function () {
     Route::get('laporan/barang_masuk/{tgl_mulai}/{tgl_sampai}/print', [LaporanBarangMasukController::class, 'print']);
     Route::resource('laporan/barang_masuk', LaporanBarangMasukController::class);
     Route::post('laporan/barang_masuk/hasil', [LaporanBarangMasukController::class, 'hasil']);
+    Route::post('laporan/barang_masuk/hasil_supplier', [LaporanBarangMasukController::class, 'hasil_supplier']);
 });

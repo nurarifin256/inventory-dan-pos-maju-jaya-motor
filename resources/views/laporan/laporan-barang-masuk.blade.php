@@ -1,6 +1,5 @@
 @extends('layouts.homepage')
 
-
 @push('css')
 <link href="{{asset('vendor/datatables.net-dt/css/jquery.dataTables.min.css')}}" rel="stylesheet" />
 <link href="{{asset('vendor/izitoast/dist/css/iziToast.min.css')}}" rel="stylesheet">
@@ -24,11 +23,16 @@
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">
+                                    <label for="">Berdasarkan Barang</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <label for="datepicker-icon" class="form-label">Tanggal Mulai</label>
                                     <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">
                                         <input class="form-control" type="text" readonly="" autocomplete="off"
-                                            name="tgl_mulai" id="tgl_mulai" value="{{ date('01-m-Y') }}"
-                                            onchange="validasiTanggal2()">
+                                            name="tgl_mulai" id="tgl_mulai_barang" value="{{ date('01-m-Y') }}"
+                                            onchange="validasiTanggal2('barang')">
                                         <button class="btn btn-outline-secondary" type="button">
                                             <i class="far fa-calendar-alt"></i>
                                         </button>
@@ -42,13 +46,62 @@
                                     <label for="datepicker-icon" class="form-label">Tanggal Sampai</label>
                                     <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">
                                         <input class="form-control" type="text" readonly="" autocomplete="off"
-                                            name="tgl_sampai" id="tgl_sampai" value="{{ date('d-m-Y') }}"
-                                            onchange="validasiTanggal()">
+                                            name="tgl_sampai" id="tgl_sampai_barang" value="{{ date('d-m-Y') }}"
+                                            onchange="validasiTanggal('barang')">
                                         <button class="btn btn-outline-secondary" type="button">
                                             <i class="far fa-calendar-alt"></i>
                                         </button>
                                     </div>
                                     @error('tgl_sampai')
+                                    <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="d-grid justify-content-md-end">
+                                    <button type="submit" class="btn btn-primary btn-md">Lihat</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ url('laporan/barang_masuk/hasil_supplier') }}" method="post">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Berdasarkan Supplier</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="datepicker-icon" class="form-label">Tanggal Mulai</label>
+                                    <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">
+                                        <input class="form-control" type="text" readonly="" autocomplete="off"
+                                            name="tgl_mulai_supplier" id="tgl_mulai_supplier"
+                                            value="{{ date('01-m-Y') }}" onchange="validasiTanggal2('supplier')">
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </button>
+                                    </div>
+                                    @error('tgl_mulai_supplier')
+                                    <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="datepicker-icon" class="form-label">Tanggal Sampai</label>
+                                    <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">
+                                        <input class="form-control" type="text" readonly="" autocomplete="off"
+                                            name="tgl_sampai_supplier" id="tgl_sampai_supplier"
+                                            value="{{ date('d-m-Y') }}" onchange="validasiTanggal('supplier')">
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </button>
+                                    </div>
+                                    @error('tgl_sampai_supplier')
                                     <span class="text-danger">{{$message}}</span>
                                     @enderror
                                 </div>
@@ -85,9 +138,9 @@
         // console.log(e.target.value);
     });
 
-    function validasiTanggal() {
-        const tgl_mulai  = $('#tgl_mulai').val()
-        const tgl_sampai = $('#tgl_sampai').val()
+    function validasiTanggal(data) {
+        const tgl_mulai  = $('#tgl_mulai_'+data).val()
+        const tgl_sampai = $('#tgl_sampai_'+data).val()
 
         if (tgl_sampai < tgl_mulai) {
             iziToast.warning({
@@ -95,21 +148,21 @@
                 message: 'Tanggal sampai tidak boleh melewati tanggal mulai',
                 position: 'topRight'
             });
-            $('#tgl_sampai').val('')
+            $('#tgl_sampai_'+data).val('')
         }
     }
 
-    function validasiTanggal2() {
-        const tgl_mulai  = $('#tgl_mulai').val()
-        const tgl_sampai = $('#tgl_sampai').val()
+    function validasiTanggal2(data) {
+        const tgl_mulai  = $('#tgl_mulai_'+data).val()
+        const tgl_sampai = $('#tgl_sampai_'+data).val()
 
         if (tgl_mulai > tgl_sampai) {
             iziToast.warning({
                 title: 'Peringatan',
-                message: 'Tanggal mulai tidak boleh melebihin tanggal sampai',
+                message: 'Tanggal mulai tidak boleh melebihi tanggal sampai',
                 position: 'topRight'
             });
-            $('#tgl_mulai').val('')
+            $('#tgl_mulai_'+data).val('')
         }
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Laporan;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LaporanBarangMasukRequest;
+use App\Http\Requests\LaporanBarangMasukSupplierRequest;
 use App\Models\Barang_masuk_details;
 use App\Models\Laporans;
 use Illuminate\Http\Request;
@@ -104,6 +105,16 @@ class LaporanBarangMasukController extends Controller
         $datas      = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
 
         return view('laporan.hasil-laporan-barang-masuk', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+    }
+
+    public function hasil_supplier(LaporanBarangMasukSupplierRequest $request)
+    {
+        $title      = "Hasil Laporan Barang Masuk Supplier";
+        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
+        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
+        $datas      = Laporans::laporan_barang_masuk_supplier($tgl_mulai, $tgl_sampai);
+
+        return view('laporan.hasil-laporan-barang-masuk-supplier', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
     }
 
     public function print($tgl_mulai, $tgl_sampai)
