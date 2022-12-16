@@ -126,4 +126,14 @@ class LaporanBarangMasukController extends Controller
         $pdf->setPaper('A4', 'potrait');
         return $pdf->stream("Print Laporan");
     }
+
+    public function print_supplier($tgl_mulai, $tgl_sampai)
+    {
+        $datas      = Laporans::laporan_barang_masuk_supplier($tgl_mulai, $tgl_sampai);
+
+        $pdf = Pdf::loadView('print.print-laporan-supplier', ['datas' => $datas, 'tgl_mulai' => $tgl_mulai, 'tgl_sampai' => $tgl_sampai]);
+        $pdf->setBasePath(public_path());
+        $pdf->setPaper('A4', 'potrait');
+        return $pdf->stream("Print Laporan Supplier");
+    }
 }

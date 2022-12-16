@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-md-4 offset-md-4">
                                 <a target="_blank"
-                                    href="{{ url('laporan/barang_masuk/'.$tgl_mulai.'/'.$tgl_sampai.'/print') }}"
+                                    href="{{ url('laporan/barang_masuk/'.$tgl_mulai.'/'.$tgl_sampai.'/print_supplier') }}"
                                     class="btn btn-sm btn-primary"><i class="ti-printer"></i> Print
                                 </a>
                             </div>
@@ -55,6 +55,7 @@
                                         <td>
                                             {{-- <input type="hidden" id="not_in_{{ $no }}" value="{{ $data->not_in }}">
                                             --}}
+
                                             <button type="button" class="btn btn-sm btn-info"
                                                 onclick="detail_laporan({{ $no }})" id="detail_laporan"><i
                                                     class="ti-eye"></i></button>
