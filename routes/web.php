@@ -103,6 +103,7 @@ Route::middleware('auth')->group(function () {
     Route::post('transaksi/pindah_locator/cek_locator', [PindahLocatorController::class, 'cek_locator']);
 
     // route laporan barang masuk
+    Route::get('laporan/barang_masuk/{tgl_mulai}/{tgl_sampai}/print', [LaporanBarangMasukController::class, 'print']);
     Route::resource('laporan/barang_masuk', LaporanBarangMasukController::class);
     Route::post('laporan/barang_masuk/hasil', [LaporanBarangMasukController::class, 'hasil']);
 });

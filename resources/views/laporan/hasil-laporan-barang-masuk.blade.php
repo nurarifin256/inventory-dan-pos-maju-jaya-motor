@@ -25,8 +25,10 @@
                                 <label>Dari {{ $tgl_mulai }} Sampai {{ $tgl_sampai }}</label>
                             </div>
                             <div class="col-md-4 offset-md-4">
-                                <button type="button" name="print" value="print" id="btn-print"
-                                    class="btn btn-sm btn-primary"><i class="ti-printer"></i> Print</button>
+                                <a target="_blank"
+                                    href="{{ url('laporan/barang_masuk/'.$tgl_mulai.'/'.$tgl_sampai.'/print') }}"
+                                    class="btn btn-sm btn-primary"><i class="ti-printer"></i> Print
+                                </a>
                             </div>
                         </div>
 

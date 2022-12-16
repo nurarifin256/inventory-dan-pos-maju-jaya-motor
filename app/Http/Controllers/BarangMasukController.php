@@ -8,7 +8,6 @@ use App\Models\Barangs;
 use App\Models\Mereks;
 use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;

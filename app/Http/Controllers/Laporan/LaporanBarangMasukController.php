@@ -8,6 +8,7 @@ use App\Models\Barang_masuk_details;
 use App\Models\Laporans;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanBarangMasukController extends Controller
 {
@@ -103,5 +104,15 @@ class LaporanBarangMasukController extends Controller
         $datas      = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
 
         return view('laporan.hasil-laporan-barang-masuk', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+    }
+
+    public function print($tgl_mulai, $tgl_sampai)
+    {
+        $datas      = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
+
+        $pdf = Pdf::loadView('print.print-laporan', ['datas' => $datas, 'tgl_mulai' => $tgl_mulai, 'tgl_sampai' => $tgl_sampai]);
+        $pdf->setBasePath(public_path());
+        $pdf->setPaper('A4', 'potrait');
+        return $pdf->stream("Print Laporan");
     }
 }
