@@ -53,9 +53,8 @@
                                         <td>{{ $data->kirim }} X</td>
                                         <td>{{ $data->total_qty }} pcs</td>
                                         <td>
-                                            {{-- <input type="hidden" id="not_in_{{ $no }}" value="{{ $data->not_in }}">
-                                            --}}
-
+                                            <input type="hidden" id="supplier_id_{{ $no }}"
+                                                value="{{ $data->supplier_id }}">
                                             <button type="button" class="btn btn-sm btn-info"
                                                 onclick="detail_laporan({{ $no }})" id="detail_laporan"><i
                                                     class="ti-eye"></i></button>
@@ -84,13 +83,13 @@
     const modal = new bootstrap.Modal($("#modalAction"));
     function detail_laporan(no)
     {
-        const not_in = $('#not_in_'+no).val()
+        const supplier_id = $('#supplier_id_'+no).val()
         const tgl_mulai = "{{ $tgl_mulai }}"
         const tgl_sampai = "{{ $tgl_sampai }}"
 
         $.ajax({
             method: "get",
-            url: `{{url('laporan/barang_masuk')}}/${not_in}`,
+            url: `{{url('laporan/barang_masuk/')}}/${supplier_id}/detail_hasil_supplier`,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                     "content"

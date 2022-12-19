@@ -31,10 +31,24 @@ class Laporans extends Model
         $datas = DB::table('barang_masuks AS A')
             ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
             ->join('barang_masuk_details AS C', 'C.barang_masuk_id', '=', 'A.id')
-            ->select('B.nama AS nama_supplier', 'B.kode_supplier', DB::raw('count(A.supplier_id) as kirim, sum(C.qty) as total_qty'))
-            ->where('A.status', '=', 1)
+            ->select('B.nama AS nama_supplier', 'B.kode_supplier', 'A.supplier_id', DB::raw('count(A.supplier_id) as kirim, sum(C.qty) as total_qty'))
+            ->where(['A.status' => 1, 'A.trashed' => 0, 'C.trashed' => 0])
             ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
             ->groupBy('A.supplier_id')
+            ->get();
+
+        return $datas;
+    }
+
+    static function laporan_barang_masuk_detail_hasil_supplier($supplier_id, $tgl_mulai, $tgl_sampai)
+    {
+        $datas = DB::table('barang_masuks AS A')
+            ->join('barang_masuk_details AS B', 'B.barang_masuk_id', '=', 'A.id')
+            ->join('barangs AS C', 'C.id', '=', 'B.barang_id')
+            ->join('mereks AS D', 'D.id', '=', 'B.merek_id')
+            ->select('A.created_at', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek')
+            ->where(['A.status' => 1, 'A.trashed' => 0, 'B.trashed' => 0, 'A.supplier_id' => $supplier_id])
+            ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
             ->get();
 
         return $datas;
