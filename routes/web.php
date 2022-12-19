@@ -4,6 +4,7 @@ use App\Http\Controllers\AkunController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\KasirController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\Laporan\LaporanBarangMasukController;
 use App\Http\Controllers\LevelController;
@@ -109,4 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::post('laporan/barang_masuk/hasil', [LaporanBarangMasukController::class, 'hasil']);
     Route::post('laporan/barang_masuk/hasil_supplier', [LaporanBarangMasukController::class, 'hasil_supplier']);
     Route::get('laporan/barang_masuk/{supplier_id}/detail_hasil_supplier', [LaporanBarangMasukController::class, 'detail_hasil_supplier']);
+
+    // route kasir
+    Route::resource('pos/kasir', KasirController::class);
 });
