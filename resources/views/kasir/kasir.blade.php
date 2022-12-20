@@ -71,12 +71,12 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="qty" class="form-label">Quantity</label>
-                                    <input type="text" name="qty" class="form-control" id="qty"
+                                    <input type="number" name="qty" class="form-control" id="qty"
                                         onchange="validasiQty(this)" onkeypress="return hanyaAngka(event)">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="" class="form-label">Stok</label>
-                                    <input type="text" readonly value="0" id="stok" class="form-control">
+                                    <input type="number" readonly value="0" id="stok" class="form-control">
                                 </div>
                                 <div class="col-md-6"></div>
                             </div>
@@ -84,7 +84,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="subtotal" class="form-label">Subtotal</label>
-                                    <input type="text" name="subtotal" class="form-control" readonly>
+                                    <input type="text" name="subtotal" class="form-control" id="subtotal" readonly>
                                 </div>
                             </div>
 
@@ -109,7 +109,9 @@
 <script src="{{ asset('vendor/select2/dist/js/select2.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('select').select2();
+        $('select').select2({
+            height: 20px;
+        });
     });
 
     function hanya_angka(data,urut='')
@@ -180,17 +182,35 @@
     }
 
     function validasiQty(data){
-        const qty  = data.value;
-        const stok = $('#stok').val()
+        let qty      = data.value;
+        let stok     = $('#stok').val()
+        let harga    = $('#harga').val()
+        let qtyInt  = parseInt(qty)
+        let stokInt = parseInt(stok)
 
-        if (qty > stok) {
+        let hargaRep = harga.replace(',', '')
+        let hargaInt = parseInt(hargaRep)
+        let subTotal = hargaInt * qtyInt
+
+        if (qtyInt > stokInt) {
             iziToast.warning({
                 title: 'Peringatan',
                 message: 'Quantity tidak boleh melebihi stok',
                 position: 'topRight'
             });
             $('#qty').val('')
+            $('#subtotal').val('')
+        } else {
+            let subTotall = rupiah(subTotal)
+            $('#subtotal').val(subTotall)
         }
+    }
+
+    const rupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+        style: "decimal",
+        currency: "IDR"
+        }).format(number);
     }
 
     function hanyaAngka(evt) {

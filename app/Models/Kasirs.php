@@ -26,9 +26,10 @@ class Kasirs extends Model
             ->join('barang_masuks AS B', 'B.id', '=', 'A.barang_masuk_id')
             ->select(DB::raw('SUM(qty) as total_qty'))
             ->where([
+                'B.status'  => 1,
                 'A.not_in'  => $not_in,
                 'A.trashed' => 0,
-                'B.status'  => 1,
+                'A.status' => 0,
             ])
             ->get();
 

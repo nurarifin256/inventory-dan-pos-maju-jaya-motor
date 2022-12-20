@@ -32,7 +32,7 @@ class Locators extends Model
             ->join('barang_masuks AS E', 'E.id', '=', 'A.barang_masuk_id')
             ->join('suppliers AS F', 'F.id', '=', 'E.supplier_id')
             ->select('A.id', 'C.level', 'D.no AS no_rack', 'B.no AS no_locator', 'A.qty', 'A.created_at', 'F.nama AS nama_supplier')
-            ->where(['A.trashed' => 0, 'A.not_in' => $not_in])
+            ->where(['A.trashed' => 0, 'A.not_in' => $not_in, 'A.status' => 0, 'E.status' => 1])
             ->get();
 
         return $locators;

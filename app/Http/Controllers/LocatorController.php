@@ -202,7 +202,6 @@ class LocatorController extends Controller
             }
 
             if (cek_isi($field->id_locators) != "") {
-                // $status = '<a href="' . url("")  . '" class="btn btn-primary btn-sm action"><i class="ti-eye"></i> Lihat</a>';;
                 $status = '<button type="button" data-id=' . $field->id_locators . ' data-jenis="lihat" class="btn btn-primary btn-sm action"><i class="ti-eye"></i> Lihat</button>';;
             } else {
                 $status = "Kosong";

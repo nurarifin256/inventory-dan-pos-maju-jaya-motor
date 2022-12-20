@@ -97,7 +97,7 @@ class KasirController extends Controller
     {
         $barang_id = $request->barang_id;
         $data = Kasirs::get_harga($barang_id);
-        $harga = number_format($data->harga, 2, '.', ',');
+        $harga = number_format($data->harga);
         return response()->json([
             'harga' => $harga
         ]);

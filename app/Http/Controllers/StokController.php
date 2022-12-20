@@ -147,7 +147,7 @@ class StokController extends Controller
         $where  = (strlen($seacrh) > 0) ? " AND A.nama LIKE '%$seacrh%' OR C.nama LIKE '%$seacrh%' OR A2.qty_total LIKE '%$seacrh%'" : "";
         $sql = "(SELECT A.nama AS nama_barang, C.nama AS nama_merek, A2.qty_total, A2.id_barang_masuk_detail, A2.not_in
                 FROM 
-                    (SELECT B.id AS id_barang_masuk_detail, B.barang_id, B.merek_id, B.barang_masuk_id, B.not_in, SUM(B.qty) AS qty_total FROM barang_masuk_details B INNER JOIN barang_masuks D ON D.id=B.barang_masuk_id WHERE B.trashed=0 AND D.status=1 GROUP BY B.not_in) AS A2
+                    (SELECT B.id AS id_barang_masuk_detail, B.barang_id, B.merek_id, B.barang_masuk_id, B.not_in, SUM(B.qty) AS qty_total FROM barang_masuk_details B INNER JOIN barang_masuks D ON D.id=B.barang_masuk_id WHERE B.trashed=0 AND B.status=0 AND D.status=1 GROUP BY B.not_in) AS A2
                 INNER JOIN barangs A ON A.id=A2.barang_id 
                 INNER JOIN mereks C ON C.id=A2.merek_id 
                 WHERE 1=1 $where 
