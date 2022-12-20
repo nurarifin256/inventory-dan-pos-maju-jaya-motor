@@ -71,7 +71,8 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="qty" class="form-label">Quantity</label>
-                                    <input type="number" name="qty" class="form-control">
+                                    <input type="text" name="qty" class="form-control" id="qty"
+                                        onchange="validasiQty(this)" onkeypress="return hanyaAngka(event)">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="" class="form-label">Stok</label>
@@ -172,19 +173,32 @@
             },
             data: {barang_id, merek_id},
             success: function(res){
-                const stok = res.data[0].total_qty
-                // const hasil = 0
-                if (stok == null) {
-                    const hasil = 'kosong'
-                    return hasil
-                } else {
-                    const hasil = 'ada'
-                    return hasil
-                }
-                console.log(hasil);
-                // $('#stok').val(hasil)
+                stok = res.data[0].total_qty
+                $('#stok').val(stok)
             }
         });
+    }
+
+    function validasiQty(data){
+        const qty  = data.value;
+        const stok = $('#stok').val()
+
+        if (qty > stok) {
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Quantity tidak boleh melebihi stok',
+                position: 'topRight'
+            });
+            $('#qty').val('')
+        }
+    }
+
+    function hanyaAngka(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+
+        return false;
+        return true;
     }
 </script>
 @endpush
