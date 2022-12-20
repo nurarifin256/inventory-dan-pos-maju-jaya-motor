@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barangs;
+use App\Models\Kasirs;
+use App\Models\Mereks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +23,8 @@ class KasirController extends Controller
 
         $title = "Kasir";
         $barangs = Barangs::where('trashed', 0)->pluck('nama', 'id');
-        return view('kasir.kasir', compact('title', 'barangs'));
+        $mereks = Mereks::where('trashed', 0)->pluck('nama', 'id');
+        return view('kasir.kasir', compact('title', 'barangs', 'mereks'));
     }
 
     /**
@@ -88,5 +91,25 @@ class KasirController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function get_harga(Request $request)
+    {
+        $barang_id = $request->barang_id;
+        $data = Kasirs::get_harga($barang_id);
+        $harga = number_format($data->harga, 2, '.', ',');
+        return response()->json([
+            'harga' => $harga
+        ]);
+    }
+
+    public function get_stok(Request $request)
+    {
+        $not_in = $request->barang_id . '_' . $request->merek_id;
+        $data = Kasirs::get_stok($not_in);
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Barang_masuk_details;
 use App\Models\Barang_masuks;
 use App\Models\Barangs;
 use App\Models\Mereks;
+use App\Models\Stocks;
 use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -99,9 +100,9 @@ class BarangMasukController extends Controller
                     'updated_by'      => Auth::user()->name,
                 ]
             ];
-
             Barang_masuk_details::insert($data);
         }
+
         return redirect('transaksi/barang_masuk')->with([
             'message' => 'Data berhasil di tambah',
         ]);
