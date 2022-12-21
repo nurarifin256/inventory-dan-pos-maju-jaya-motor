@@ -115,4 +115,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('pos/kasir', KasirController::class);
     Route::post('pos/kasir/get_harga', [KasirController::class, 'get_harga']);
     Route::post('pos/kasir/get_stok', [KasirController::class, 'get_stok']);
+    Route::post('pos/kasir/get_locator', [KasirController::class, 'get_locator']);
 });

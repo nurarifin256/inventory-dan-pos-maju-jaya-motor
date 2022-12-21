@@ -7,6 +7,7 @@ use App\Models\Kasirs;
 use App\Models\Mereks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Echo_;
 
 class KasirController extends Controller
 {
@@ -110,6 +111,15 @@ class KasirController extends Controller
 
         return response()->json([
             'data' => $data
+        ]);
+    }
+
+    public function get_locator(Request $request)
+    {
+        $not_in = $request->not_in;
+        $datas   = Kasirs::get_locator($not_in);
+        return response()->json([
+            'data' => $datas
         ]);
     }
 }

@@ -83,6 +83,15 @@
 
                             <div class="row">
                                 <div class="col-md-6">
+                                    <label for="locator_id" class="form-label">Locator</label>
+                                    <select class="form-select" name="locator_id" id="locator_id" multiple>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
                                     <label for="subtotal" class="form-label">Subtotal</label>
                                     <input type="text" name="subtotal" class="form-control" id="subtotal" readonly>
                                 </div>
@@ -110,7 +119,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('select').select2({
-            height: 20px;
+            placeholder: 'Pilih Locator'
         });
     });
 
@@ -163,7 +172,8 @@
     function getStok(data)
     {
         const barang_id = $('#barang_id').val();
-        const merek_id = data.value;
+        const merek_id  = data.value;
+        const not_in = barang_id +'_'+ merek_id
 
         $.ajax({
             method: "post",
@@ -177,8 +187,34 @@
             success: function(res){
                 stok = res.data[0].total_qty
                 $('#stok').val(stok)
+                getLocator(not_in)
             }
         });
+    }
+
+    function getLocator(not_in)
+    {
+        const selectLocator = document.getElementById("locator_id")
+        $.ajax({
+            method: "post",
+            url: "{{ url('pos/kasir/get_locator') }}",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            data: {not_in},
+            success: function(res){
+                const jumlahData = res.data.length
+                let options = "";
+                for (let i = 0; i < jumlahData; i++) {
+                    options += "<option value='"+res.data[i].id+"'>"+res.data[i].no_rack+" - "+res.data[i].level+" - "+res.data[i].no_locator+" Stok "+res.data[i].qty+"</option>"
+                }
+                selectLocator.innerHTML = "<select class='form-select' name='locator_id' id='locator_id' multiple>" + 
+                                                options +
+                                            "</select>"
+            }
+        })
     }
 
     function validasiQty(data){
