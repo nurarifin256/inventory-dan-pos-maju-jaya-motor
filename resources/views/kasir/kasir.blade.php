@@ -60,8 +60,8 @@
                                     <label for="bayar" class="form-label">Bayar</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Rp.</span>
-                                        <input type="text" class="form-control" autocomplete="off"
-                                            onkeyup="hanya_angka(this)" onchange="kembali(this)">
+                                        <input type="text" class="form-control" id="bayar" autocomplete="off"
+                                            onkeyup="hanya_angka(this)" onchange="kembali(this)" required>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                     <label for="kembali" class="form-label">Kembali</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Rp.</span>
-                                        <input type="text" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="kembalian" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -133,10 +133,11 @@
                             <table class="table table-bordered" id="tabel-barang">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Barang</th>
                                         <th>Merek</th>
                                         <th>Harga</th>
-                                        <th>Qty</th>
+                                        <th style="width: 10%">Qty</th>
                                         <th>Subtotal</th>
                                     </tr>
                                 </thead>
@@ -176,22 +177,34 @@
         const qty        = $('#qty').val()
         const subTotal   = $('#subtotal').val()
         const idLocator  = $('#locator_id').val()
+        const tabel = document.getElementById("tabel-barang");
+        const no = tabel.rows.length;
 
-        var table = document.getElementsByTagName('table')[0];
-        var newRow = table.insertRow(table.rows.length);
-        var cell1 = newRow.insertCell(0);
-        var cell2 = newRow.insertCell(1);
-        var cell3 = newRow.insertCell(2);
-        var cell4 = newRow.insertCell(3);
-        var cell5 = newRow.insertCell(4);
-        
-        cell1.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
-        cell2.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
-        cell3.innerHTML = harga + '<input type="hidden" name="harga[]" value="'+harga+'"></input>';
-        cell4.innerHTML = qty + '<input type="hidden" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input>';
-        cell5.innerHTML = subTotal + '<input type="hidden" id="subtotal-tabel" name="subtotal[]" value="'+subTotal+'"></input>';
+        if (qty == 0) {
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Quantity harus di isi',
+                position: 'topRight'
+            });
+        } else {
+            var table = document.getElementsByTagName('table')[0];
+            var newRow = table.insertRow(table.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+            var cell6 = newRow.insertCell(5);
+            
+            cell1.innerHTML = no
+            cell2.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
+            cell3.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
+            cell4.innerHTML = harga + '<input type="hidden" name="harga[]" value="'+harga+'"></input>';
+            cell5.innerHTML = '<input type="number" class="form-control" id="qty_'+no+'" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input>';
+            cell6.innerHTML = subTotal + '<input type="hidden" id="subtotal-tabel-'+no+'" name="subtotal[]" value="'+subTotal+'"></input>';
 
-        getTotal()
+            getTotal()
+        }
     }
 
     function getTotal()
@@ -245,7 +258,16 @@
         let bayarRep = parseInt(bayar.replace(',', ''))
 
         if (bayarRep < totalRep) {
-            console.log('kurang coy');
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Pembayaran kurang',
+                position: 'topRight'
+            });
+            $('#bayar').val(0)
+        } else {
+            let kembali = bayarRep - totalRep;
+            let kembalian = rupiah(kembali)
+            $('#kembalian').val(kembalian)
         }
     }
 
