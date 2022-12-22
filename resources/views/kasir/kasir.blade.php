@@ -110,7 +110,7 @@
                                     <label for="subtotal" class="form-label">Subtotal</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Rp</span>
-                                        <input type="text" class="form-control" id="subtotal" readonly>
+                                        <input type="text" readonly class="form-control" id="subtotal">
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                         <th>Merek</th>
                                         <th>Harga</th>
                                         <th style="width: 10%">Qty</th>
-                                        <th>Subtotal</th>
+                                        <th style="width: 20%">Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -199,12 +199,36 @@
             cell1.innerHTML = no
             cell2.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
             cell3.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
-            cell4.innerHTML = harga + '<input type="hidden" name="harga[]" value="'+harga+'"></input>';
-            cell5.innerHTML = '<input type="number" class="form-control" id="qty_'+no+'" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input>';
-            cell6.innerHTML = subTotal + '<input type="hidden" id="subtotal-tabel-'+no+'" name="subtotal[]" value="'+subTotal+'"></input>';
+            cell4.innerHTML = harga + '<input type="hidden" id="harga_tabel_'+no+'" name="harga[]" value="'+harga+'"></input>';
+            cell5.innerHTML = '<input type="text" class="form-control" id="qty_tabel_'+no+'" onkeypress="return hanyaAngka(event)" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input>';
+            cell6.innerHTML = '<input type="text" readonly class="form-control" id="subtotal_tabel_'+no+'" name="subtotal[]" value="'+subTotal+'"></input>';
 
             getTotal()
         }
+    }
+
+    function updateSubtotal(no) {
+        const qty   = $('#qty_tabel_'+no).val()
+        const harga = $('#harga_tabel_'+no).val()
+        const hargaRep = parseInt(harga.replace(',', ''))
+        // const subTotalRep = rupiah(subTotal)
+        
+        if (qty < 1) {
+            iziToast.warning({
+                title: 'Peringatan',
+                message: 'Quantity tidak boleh nol',
+                position: 'topRight'
+            });
+            $('#qty_tabel_'+no).val(1)
+            const subTotal = rupiah(hargaRep * 1)
+            $('#subtotal_tabel_'+no).val(subTotal)
+            getTotal()
+        } else {
+            const subTotal = rupiah(qty * hargaRep)
+            $('#subtotal_tabel_'+no).val(subTotal)
+            getTotal()
+        }
+
     }
 
     function getTotal()
