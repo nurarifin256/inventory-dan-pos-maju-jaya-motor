@@ -16,13 +16,16 @@
     <div class="content-wrapper">
         <div class="row same-height">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Kasir</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="" method="POST">
-                            @csrf
+
+                <form action="" method="POST" id="form-kasir">
+                    @csrf
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Kasir</h4>
+                        </div>
+                        <div class="card-body">
+
                             <div class="row">
                                 <div class="col">
                                     <label for="barang_id" class="form-label">Barang</label>
@@ -36,7 +39,7 @@
                                 </div>
                                 <div class="col">
                                     <label for="total" class="form-label">Total</label>
-                                    <input type="text" class="form-control" name="total" readonly>
+                                    <input type="text" class="form-control" name="total" id="total" readonly>
                                 </div>
                             </div>
                             <div class="row">
@@ -60,7 +63,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="harga" class="form-label">Harga</label>
-                                    <input type="text" name="harga" id="harga" class="form-control" readonly>
+                                    <input type="text" id="harga" class="form-control" readonly>
                                 </div>
                                 <div class="col">
                                     <label for="kembali" class="form-label">Kembali</label>
@@ -71,8 +74,8 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="qty" class="form-label">Quantity</label>
-                                    <input type="number" name="qty" class="form-control" id="qty"
-                                        onchange="validasiQty(this)" onkeypress="return hanyaAngka(event)">
+                                    <input type="number" class="form-control" id="qty" onchange="validasiQty(this)"
+                                        onkeypress="return hanyaAngka(event)">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="" class="form-label">Stok</label>
@@ -84,7 +87,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="locator_id" class="form-label">Locator</label>
-                                    <select class="form-select" name="locator_id" id="locator_id" multiple>
+                                    <select class="form-select" name="locator_id" id="locator_id">
                                         <option></option>
                                     </select>
                                 </div>
@@ -93,15 +96,34 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="subtotal" class="form-label">Subtotal</label>
-                                    <input type="text" name="subtotal" class="form-control" id="subtotal" readonly>
+                                    <input type="text" class="form-control" id="subtotal" readonly>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-sm btn-info mt-3"><i class="ti-shopping-cart-full"></i>
+                            <button type="button" onclick="tambahBarang()" class="btn btn-sm btn-info mt-3"><i
+                                    class="ti-shopping-cart-full"></i>
                                 Tambah</button>
-                        </form>
+
+                        </div>
+
+                        <div class="card-body">
+                            <table class="table table-bordered" id="tabel-barang">
+                                <thead>
+                                    <tr>
+                                        <th>Barang</th>
+                                        <th>Merek</th>
+                                        <th>Harga</th>
+                                        <th>Qty</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                </form>
+
             </div>
         </div>
     </div>
@@ -122,6 +144,50 @@
             placeholder: 'Pilih Locator'
         });
     });
+
+    function tambahBarang() {
+        const namaBarang = $('select[name=barang_id] option:selected').text()
+        const namaMerek  = $('select[name=merek_id] option:selected').text()
+        const idBarang   = $('#barang_id').val()
+        const idMerek    = $('#merek_id').val()
+        const harga      = $('#harga').val()
+        const qty        = $('#qty').val()
+        const subTotal   = $('#subtotal').val()
+        const idLocator  = $('#locator_id').val()
+
+        var table = document.getElementsByTagName('table')[0];
+        var newRow = table.insertRow(table.rows.length);
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+        var cell5 = newRow.insertCell(4);
+        
+        cell1.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
+        cell2.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
+        cell3.innerHTML = harga + '<input type="hidden" name="harga[]" value="'+harga+'"></input>';
+        cell4.innerHTML = qty + '<input type="hidden" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input>';
+        cell5.innerHTML = subTotal + '<input type="hidden" id="subtotal-tabel" name="subtotal[]" value="'+subTotal+'"></input>';
+
+        getTotal()
+    }
+
+    function getTotal()
+    {
+        $.ajax({
+            method: "post",
+            url: `{{url('pos/kasir/get_total')}}`,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            data: $('#form-kasir').serialize(),
+            success: function(res){
+                $('#total').val(res.hasil)
+            }
+        });
+    }
 
     function hanya_angka(data,urut='')
 	{
@@ -210,9 +276,7 @@
                 for (let i = 0; i < jumlahData; i++) {
                     options += "<option value='"+res.data[i].id+"'>"+res.data[i].no_rack+" - "+res.data[i].level+" - "+res.data[i].no_locator+" Stok "+res.data[i].qty+"</option>"
                 }
-                selectLocator.innerHTML = "<select class='form-select' name='locator_id' id='locator_id' multiple>" + 
-                                                options +
-                                            "</select>"
+                selectLocator.innerHTML = options 
             }
         })
     }

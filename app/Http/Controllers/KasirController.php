@@ -33,9 +33,8 @@ class KasirController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
     }
 
     /**
@@ -46,7 +45,7 @@ class KasirController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->locator_id);
     }
 
     /**
@@ -120,6 +119,23 @@ class KasirController extends Controller
         $datas   = Kasirs::get_locator($not_in);
         return response()->json([
             'data' => $datas
+        ]);
+    }
+
+    public function get_total(Request $request)
+    {
+        $subtotal = $request->subtotal;
+        $subtotal_rep = str_replace('.', '', $subtotal);
+        $jumlah_total = 0;
+        $jumlah_total = ($jumlah_total > 0) ? ($jumlah_total) : 0;
+        foreach ($subtotal_rep as $key => $value) {
+            $total_set = str_replace('.', '', $subtotal[$key]);
+            $jumlah_total += $total_set;
+        }
+        $hasil = number_format($jumlah_total);
+
+        return response()->json([
+            'hasil' => $hasil,
         ]);
     }
 }
