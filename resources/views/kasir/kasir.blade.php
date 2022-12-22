@@ -39,13 +39,16 @@
                                 </div>
                                 <div class="col">
                                     <label for="total" class="form-label">Total</label>
-                                    <input type="text" class="form-control" name="total" id="total" readonly>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp</span>
+                                        <input type="text" class="form-control" name="total" id="total" readonly>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                     <label for="barang" class="form-label">Merek</label>
-                                    <select class="select-merek form-select form-select-md mb-3" name="merek_id"
+                                    <select class="select-merek form-select form-select-md" name="merek_id"
                                         id="merek_id" onchange="getStok(this)">
                                         <option>Pilih Merek</option>
                                         @foreach ($mereks as $id => $nama)
@@ -55,19 +58,28 @@
                                 </div>
                                 <div class="col">
                                     <label for="bayar" class="form-label">Bayar</label>
-                                    <input type="text" class="form-control" autocomplete="off"
-                                        onkeyup="hanya_angka(this)">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp.</span>
+                                        <input type="text" class="form-control" autocomplete="off"
+                                            onkeyup="hanya_angka(this)" onchange="kembali(this)">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col">
                                     <label for="harga" class="form-label">Harga</label>
-                                    <input type="text" id="harga" class="form-control" readonly>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp.</span>
+                                        <input type="text" id="harga" class="form-control" readonly>
+                                    </div>
                                 </div>
                                 <div class="col">
                                     <label for="kembali" class="form-label">Kembali</label>
-                                    <input type="text" class="form-control" readonly>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp.</span>
+                                        <input type="text" class="form-control" readonly>
+                                    </div>
                                 </div>
                             </div>
 
@@ -96,13 +108,24 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="subtotal" class="form-label">Subtotal</label>
-                                    <input type="text" class="form-control" id="subtotal" readonly>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp</span>
+                                        <input type="text" class="form-control" id="subtotal" readonly>
+                                    </div>
                                 </div>
                             </div>
 
-                            <button type="button" onclick="tambahBarang()" class="btn btn-sm btn-info mt-3"><i
-                                    class="ti-shopping-cart-full"></i>
-                                Tambah</button>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="button" onclick="tambahBarang()"
+                                        class="btn btn-sm btn-success mt-3"><i class="ti-shopping-cart-full"></i>
+                                        Tambah</button>
+
+                                    <button type="submit" class="btn btn-sm btn-info mt-3 ml-3"><i
+                                            class="ti-desktop"></i>
+                                        Bayar</button>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -123,7 +146,6 @@
                         </div>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
@@ -215,6 +237,17 @@
         result = split[1] != undefined ? result + decimal_separator + split[1] : result;
         return prefix == undefined ? result : (result ?  result  + prefix: '');
     };
+
+    function kembali(data){
+        let total = $('#total').val()
+        let bayar = data.value
+        let totalRep = parseInt(total.replace(',', ''))
+        let bayarRep = parseInt(bayar.replace(',', ''))
+
+        if (bayarRep < totalRep) {
+            console.log('kurang coy');
+        }
+    }
 
     function getHarga(data)
     {
