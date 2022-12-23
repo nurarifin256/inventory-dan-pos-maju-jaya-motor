@@ -36,11 +36,16 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <label for="total" class="form-label">Total</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text" id="basic-addon1">Rp</span>
-                                        <input type="text" class="form-control" name="total" id="total" readonly>
-                                    </div>
+
+                                    <label for="barang" class="form-label">Pelanggan</label>
+                                    <select class="select-merek form-select form-select-md" name="pelanggan_id"
+                                        id="pelanggan_id">
+                                        <option value="0">Pilih Pelanggan</option>
+                                        @foreach ($pelanggans as $id => $nama)
+                                        <option value="{{ $id }}">{{ $nama }}</option>
+                                        @endforeach
+                                    </select>
+
                                 </div>
                             </div>
                             <div class="row">
@@ -55,12 +60,13 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <label for="bayar" class="form-label">Bayar</label>
+
+                                    <label for="total" class="form-label">Total</label>
                                     <div class="input-group">
-                                        <span class="input-group-text" id="basic-addon1">Rp.</span>
-                                        <input type="text" class="form-control" id="bayar" autocomplete="off"
-                                            onkeyup="hanya_angka(this)" onchange="kembali(this)" required>
+                                        <span class="input-group-text" id="basic-addon1">Rp</span>
+                                        <input type="text" class="form-control" name="total" id="total" readonly>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -73,11 +79,14 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <label for="kembali" class="form-label">Kembali</label>
+
+                                    <label for="bayar" class="form-label">Bayar</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1">Rp.</span>
-                                        <input type="text" class="form-control" id="kembalian" readonly>
+                                        <input type="text" class="form-control" id="bayar" autocomplete="off"
+                                            onkeyup="hanya_angka(this)" onchange="kembali(this)" required>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -91,7 +100,13 @@
                                     <label for="" class="form-label">Stok</label>
                                     <input type="number" readonly value="0" id="stok" class="form-control">
                                 </div>
-                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <label for="kembali" class="form-label">Kembali</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp.</span>
+                                        <input type="text" class="form-control" id="kembalian" readonly>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">

@@ -38,7 +38,7 @@ class Barang_masuk_details extends Model
             ->join('levels AS E', 'E.id', '=', 'D.level_id')
             ->join('racks AS F', 'F.id', '=', 'D.rack_id')
             ->select('A.id', 'B.nama AS nama_barang', 'C.nama AS nama_merek', 'A.qty', 'A.barang_id', 'A.merek_id', 'E.level', 'F.no AS no_rack', 'D.no AS no_locator', 'A.locator_id')
-            ->where('A.barang_masuk_id', '=', $id)
+            ->where(['A.barang_masuk_id' => $id, 'A.status' => 0, 'A.trashed' => 0])
             ->get();
 
         return $barang_masuk_details;

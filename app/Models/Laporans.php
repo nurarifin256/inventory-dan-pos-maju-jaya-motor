@@ -31,10 +31,10 @@ class Laporans extends Model
         $datas = DB::table('barang_masuks AS A')
             ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
             ->join('barang_masuk_details AS C', 'C.barang_masuk_id', '=', 'A.id')
-            ->select('B.nama AS nama_supplier', 'B.kode_supplier', 'A.supplier_id', DB::raw('count(A.supplier_id) as kirim, sum(C.qty) as total_qty'))
+            ->select('B.nama AS nama_supplier', 'B.kode_supplier', 'A.supplier_id', DB::raw('count(A.created_at) as kirim, sum(C.qty) as total_qty'))
             ->where(['A.status' => 1, 'A.trashed' => 0, 'C.trashed' => 0])
             ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
-            ->groupBy('A.supplier_id')
+            ->groupBy('A.created_at')
             ->get();
 
         return $datas;
