@@ -45,7 +45,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($datas as $no => $data)
+                                    @foreach ($datas->get() as $no => $data)
                                     <tr>
                                         <td>{{ ++$no }}</td>
                                         <td>{{ $data->nama_supplier }}</td>

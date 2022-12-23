@@ -28,16 +28,25 @@ class Laporans extends Model
 
     static function laporan_barang_masuk_supplier($tgl_mulai, $tgl_sampai)
     {
-        $datas = DB::table('barang_masuks AS A')
-            ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
-            ->join('barang_masuk_details AS C', 'C.barang_masuk_id', '=', 'A.id')
-            ->select('B.nama AS nama_supplier', 'B.kode_supplier', 'A.supplier_id', DB::raw('count(A.created_at) as kirim, sum(C.qty) as total_qty'))
-            ->where(['A.status' => 1, 'A.trashed' => 0, 'C.trashed' => 0])
-            ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
-            ->groupBy('A.created_at')
-            ->get();
+        // $datas = DB::table('barang_masuks AS A')
+        //     ->join('suppliers AS B', 'B.id', '=', 'A.supplier_id')
+        //     ->join('barang_masuk_details AS C', 'C.barang_masuk_id', '=', 'A.id')
+        //     ->select('B.nama AS nama_supplier', 'B.kode_supplier', 'A.supplier_id', DB::raw('count(A.created_at) as kirim, sum(C.qty) as total_qty'))
+        //     ->where(['A.status' => 1, 'A.trashed' => 0, 'C.trashed' => 0])
+        //     ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
+        //     ->groupBy('A.created_at')
+        //     ->get();
 
-        return $datas;
+        $sql = "(SELECT A1.kirim, A1.id, SUM(C.qty) AS total_qty, D.nama AS nama_supplier, D.kode_supplier, A1.created_at, D.id AS supplier_id FROM
+                        (SELECT COUNT(B.id) AS kirim, B.id, B.supplier_id, B.created_at FROM barang_masuks B WHERE B.status=1 AND B.trashed=0 GROUP BY B.id) A1
+                    INNER JOIN barang_masuk_details C ON C.barang_masuk_id=A1.id 
+                    INNER JOIN suppliers D ON D.id=A1.supplier_id
+                    WHERE C.trashed=0 GROUP BY C.barang_masuk_id
+                    ) AS A2";
+
+        $sqls = DB::table(DB::raw($sql));
+        $sqls->whereBetween('A2.created_at', [$tgl_mulai, $tgl_sampai]);
+        return $sqls;
     }
 
     static function laporan_barang_masuk_detail_hasil_supplier($supplier_id, $tgl_mulai, $tgl_sampai)

@@ -126,6 +126,8 @@ class LaporanBarangMasukController extends Controller
         $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
         $datas      = Laporans::laporan_barang_masuk_supplier($tgl_mulai, $tgl_sampai);
 
+        // dd($datas->get());
+
         return view('laporan.hasil-laporan-barang-masuk-supplier', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
     }
 
