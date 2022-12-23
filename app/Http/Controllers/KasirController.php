@@ -7,7 +7,6 @@ use App\Models\Kasirs;
 use App\Models\Mereks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpParser\Node\Stmt\Echo_;
 
 class KasirController extends Controller
 {
@@ -45,7 +44,8 @@ class KasirController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->locator_id);
+        $not_in                 = $request->not_in;
+        $id_barang_masuk_detail = $request->id_barang_masuk_detail;
     }
 
     /**

@@ -1,6 +1,5 @@
 @extends('layouts.homepage')
 
-
 @push('css')
 <link href="{{asset('vendor/datatables.net-dt/css/jquery.dataTables.min.css')}}" rel="stylesheet" />
 <link href="{{asset('vendor/datatables.net-responsive-dt/css/responsive.dataTables.min.css')}}" rel="stylesheet" />
@@ -17,9 +16,8 @@
         <div class="row same-height">
             <div class="col-md-12">
 
-                <form action="" method="POST" id="form-kasir">
+                <form action="{{ route('kasir.store') }}" method="POST" id="form-kasir">
                     @csrf
-
                     <div class="card">
                         <div class="card-header">
                             <h4>Kasir</h4>
@@ -100,7 +98,7 @@
                                 <div class="col-md-6">
                                     <label for="locator_id" class="form-label">Locator</label>
                                     <select class="form-select" name="locator_id" id="locator_id">
-                                        <option></option>
+                                        <option>Pilih Locator</option>
                                     </select>
                                 </div>
                             </div>
@@ -133,6 +131,7 @@
                             <table class="table table-bordered" id="tabel-barang">
                                 <thead>
                                     <tr>
+                                        <th>Aksi</th>
                                         <th>No</th>
                                         <th>Barang</th>
                                         <th>Merek</th>
@@ -141,8 +140,6 @@
                                         <th style="width: 20%">Subtotal</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -163,9 +160,7 @@
 <script src="{{ asset('vendor/select2/dist/js/select2.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('select').select2({
-            placeholder: 'Pilih Locator'
-        });
+        $('select').select2();
     });
 
     function tambahBarang() {
@@ -179,6 +174,7 @@
         const idLocator  = $('#locator_id').val()
         const tabel = document.getElementById("tabel-barang");
         const no = tabel.rows.length;
+        const not_in = idBarang +'_'+ idMerek
 
         if (qty == 0) {
             iziToast.warning({
@@ -195,16 +191,46 @@
             var cell4 = newRow.insertCell(3);
             var cell5 = newRow.insertCell(4);
             var cell6 = newRow.insertCell(5);
+            var cell7 = newRow.insertCell(6);
             
-            cell1.innerHTML = no
-            cell2.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
-            cell3.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
-            cell4.innerHTML = harga + '<input type="hidden" id="harga_tabel_'+no+'" name="harga[]" value="'+harga+'"></input>';
-            cell5.innerHTML = '<input type="text" class="form-control" id="qty_tabel_'+no+'" onkeypress="return hanyaAngka(event)" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input>';
-            cell6.innerHTML = '<input type="text" readonly class="form-control" id="subtotal_tabel_'+no+'" name="subtotal[]" value="'+subTotal+'"></input>';
-
+            cell1.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="hapusBaris(this)"><i class="ti-trash"></i></button>';
+            cell2.innerHTML = no
+            cell3.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
+            cell4.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
+            cell5.innerHTML = harga + '<input type="hidden" id="harga_tabel_'+no+'" name="harga[]" value="'+harga+'"></input>';
+            cell6.innerHTML = '<input type="text" class="form-control" id="qty_tabel_'+no+'" onkeypress="return hanyaAngka(event)" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input><input type="hidden" name="not_in[]" value="'+not_in+'"></input>';
+            cell7.innerHTML = '<input type="text" readonly class="form-control" id="subtotal_tabel_'+no+'" name="subtotal[]" value="'+subTotal+'"></input>';
             getTotal()
+            reset()
         }
+    }
+    
+    function reset() {
+        const selectBarang  = document.getElementById("barang_id")
+        const selectMerek   = document.getElementById("merek_id")
+        const selectLocator = document.getElementById("locator_id")
+
+        selectBarang.innerHTML = '<option value="">Pilih Barang</option>' +
+                                    '@foreach ($barangs as $id => $nama)' +
+                                    '<option value="{{ $id }}">{{ $nama }}</option>' +
+                                    '@endforeach'
+
+        selectMerek.innerHTML = '<option value="">Pilih Merek</option>' +
+                                    '@foreach ($mereks as $id => $nama)' +
+                                    '<option value="{{ $id }}">{{ $nama }}</option>' +
+                                    '@endforeach'
+
+        selectLocator.innerHTML = '<option>Pilih Locator</option>'
+
+        $('#harga').val('')
+        $('#qty').val('')
+        $('#stok').val('')
+        $('#subtotal').val('')
+    }
+
+    function hapusBaris(data) {
+        $(data).closest('tr').remove()
+        getTotal()
     }
 
     function updateSubtotal(no) {
@@ -287,7 +313,8 @@
                 message: 'Pembayaran kurang',
                 position: 'topRight'
             });
-            $('#bayar').val(0)
+            $('#bayar').val('')
+            $('#kembalian').val('')
         } else {
             let kembali = bayarRep - totalRep;
             let kembalian = rupiah(kembali)

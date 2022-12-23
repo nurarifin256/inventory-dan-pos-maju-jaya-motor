@@ -11,6 +11,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocatorController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MerekController;
+use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PindahLocatorController;
 use App\Http\Controllers\RakController;
 use App\Http\Controllers\StagingAreaController;
@@ -110,6 +111,10 @@ Route::middleware('auth')->group(function () {
     Route::post('laporan/barang_masuk/hasil', [LaporanBarangMasukController::class, 'hasil']);
     Route::post('laporan/barang_masuk/hasil_supplier', [LaporanBarangMasukController::class, 'hasil_supplier']);
     Route::get('laporan/barang_masuk/{supplier_id}/detail_hasil_supplier', [LaporanBarangMasukController::class, 'detail_hasil_supplier']);
+
+    // route pelanggan
+    Route::resource('pos/pelanggan', PelangganController::class);
+    Route::post('pos/pelanggan/data_list', [PelangganController::class, 'data_list']);
 
     // route kasir
     Route::resource('pos/kasir', KasirController::class);
