@@ -19,10 +19,12 @@
                     <div class="card-header">
                         <h4>Edit Barang Masuk</h4>
                     </div>
-                    <form action="{{ route('barang_masuk.update', $barang_masuk->id) }}" method="POST"
+
+                    <form action="{{ url('transaksi/barang_masuk/'. $barang_masuk->id) }}" method="POST"
                         id="form_barang_masuk">
                         @csrf
                         @method('put')
+
                         <div class="card-body">
                             <div class="mb-2 row">
                                 <label for="supplier_id" class="col-sm-2 col-form-label">Supplier</label>
@@ -53,9 +55,13 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tabel_barang">
-                                        @foreach ($barang_masuk_details as $barang_masuk_detail)
+                                        @foreach ($barang_masuk_details->get() as $barang_masuk_detail)
                                         <tr>
-                                            <input type="hidden" value="{{ $barang_masuk_detail->id }}"
+                                            <input type="hidden"
+                                                value="{{ $barang_masuk_detail->id_barang_masuk_detail }}"
+                                                name="id_barang_masuk_detail[]">
+                                            <input type="hidden"
+                                                value="{{ $barang_masuk_detail->id_barang_masuk_detail_laporan }}"
                                                 name="id_barang_masuk_detail[]">
                                             <td>
                                                 <input class="form-check-input" type="checkbox" name="chk[]"
@@ -92,7 +98,9 @@
                                 <button type="submit" class="btn btn-primary">Ubah</button>
                             </div>
                         </div>
+
                     </form>
+
                 </div>
             </div>
         </div>

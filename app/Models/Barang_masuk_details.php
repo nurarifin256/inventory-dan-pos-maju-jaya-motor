@@ -95,4 +95,14 @@ class Barang_masuk_details extends Model
 
         return $datas;
     }
+
+    static function get_detail_for_edit($id_barang_masuk)
+    {
+
+        $sql = "(SELECT B.id AS id_barang_masuk_detail, C.id AS id_barang_masuk_detail_laporan, B.barang_id, B.merek_id, B.qty, A.trashed as trashed_header, B.trashed AS trashed_detail, B.barang_masuk_id FROM barang_masuks A INNER JOIN barang_masuk_details B ON B.barang_masuk_id=A.id INNER JOIN barang_masuk_detail_laporans C ON C.barang_masuk_id=A.id AND C.barang_id=B.barang_id AND C.merek_id=B.merek_id) AS A1";
+
+        $sqls = DB::table(DB::raw($sql));
+        $sqls->where(['A1.trashed_header' => 0, 'A1.barang_masuk_id' => $id_barang_masuk, 'A1.trashed_detail' => 0]);
+        return $sqls;
+    }
 }

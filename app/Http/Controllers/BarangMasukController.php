@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang_masuk_detail_laporans;
 use App\Models\Barang_masuk_details;
 use App\Models\Barang_masuks;
 use App\Models\Barangs;
@@ -101,6 +102,7 @@ class BarangMasukController extends Controller
                 ]
             ];
             Barang_masuk_details::insert($data);
+            Barang_masuk_detail_laporans::insert($data);
         }
 
         return redirect('transaksi/barang_masuk')->with([
@@ -137,12 +139,12 @@ class BarangMasukController extends Controller
             abort(403, 'unauthorized');
         }
 
-        $title               = "Edit Barang Masuk";
-        $suppliers           = Supplier::where('trashed', 0)->pluck('nama', 'id');
-        $barangs             = Barangs::where('trashed', 0)->pluck('nama', 'id');
-        $mereks              = Mereks::where('trashed', 0)->pluck('nama', 'id');
-        $barang_masuk        = Barang_masuks::find($id);
-        $barang_masuk_details = Barang_masuk_details::where(['trashed' => 0, 'barang_masuk_id' => $id])->get();
+        $title                        = "Edit Barang Masuk";
+        $suppliers                    = Supplier::where('trashed', 0)->pluck('nama', 'id');
+        $barangs                      = Barangs::where('trashed', 0)->pluck('nama', 'id');
+        $mereks                       = Mereks::where('trashed', 0)->pluck('nama', 'id');
+        $barang_masuk                 = Barang_masuks::find($id);
+        $barang_masuk_details         = Barang_masuk_details::get_detail_for_edit($id);
         return view('barang.edit-barang-masuk', compact('title', 'suppliers', 'barangs', 'mereks', 'barang_masuk', 'barang_masuk_details'));
     }
 
@@ -153,7 +155,7 @@ class BarangMasukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Barang_masuks $barang_masuks, Barang_masuk_details $Barang_masuk_details, $id)
+    public function update(Request $request, $id)
     {
         if (cekAkses(Auth::user()->id, "Barang Masuk", "ubah") != TRUE) {
             abort(403, 'unauthorized');
@@ -164,16 +166,12 @@ class BarangMasukController extends Controller
         $barang_masuks->updated_by  = Auth::user()->name;
         $barang_masuks->save();
 
-        $id_barang_masuk_detail = $request->id_barang_masuk_detail;
-        $barangs                = $request->barang_id;
-        $merek                  = $request->merek_id;
-        $qty                    = $request->qty;
+        $id_barang_masuk_detail         = $request->id_barang_masuk_detail;
+        $id_barang_masuk_detail_laporan = $request->id_barang_masuk_detail_laporan;
+        $barangs                        = $request->barang_id;
+        $merek                          = $request->merek_id;
+        $qty                            = $request->qty;
 
-        // $cek_datas = DB::table("barang_masuk_details")
-        //     ->where('barang_masuk_id', '=', $id)
-        //     ->get();
-
-        // foreach ($cek_datas as $values) {
         $where_not_in2 = [];
         foreach ($barangs as $key => $value) {
             $data =
@@ -187,31 +185,7 @@ class BarangMasukController extends Controller
                 ];
             Barang_masuk_details::where('id', $id_barang_masuk_detail[$key])->update($data);
             $where_not_in2[] = $value . '_' . $merek[$key];
-            // if ($id_barang_masuk_detail[$key] != null) {
-            //     $ada = "ada";
-            // } else {
-            //     $ada = "tidak ada";
-            // }
-            // dd($ada);
-
-            // $id_barang_masuk_detail = $id_barang_masuk_detail[$key];
-
-            // $where_not_in = $value[$key] . '_' . $merek[$key];
-
-            // if ($values->id == $id_barang_masuk_detail) {
-            //     $cek = "ada";
-            // } else {
-            //     $cek = "tidak ada";
-            // }
-            // if (($values->not_in == $where_not_in) and ()) {
-            //     $cek = "ada";
-            // } else {
-            //     $cek = "tidak ada";
-            //     // Barang_masuk_details::insert($data)
-            // }
-            // dd($values->not_in, $where_not_in, $values->id, $id_barang_masuk_detail, $cek);
         }
-        // }
 
         $datas = DB::table("barang_masuk_details AS A")
             ->select(DB::raw("A.*, CONCAT(A.barang_id,'_',A.merek_id) AS WHERE_NOT_IN"))

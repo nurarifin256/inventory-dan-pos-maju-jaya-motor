@@ -89,8 +89,8 @@ Route::middleware('auth')->group(function () {
     Route::post('inventory/barang/data_list', [BarangController::class, 'data_list']);
 
     // route barang masuk
-    Route::get('transaksi/barang_masuk/{id}/print', [BarangMasukController::class, 'print']);
     Route::resource('transaksi/barang_masuk', BarangMasukController::class);
+    Route::get('transaksi/barang_masuk/{id}/print', [BarangMasukController::class, 'print']);
     Route::post('transaksi/barang_masuk/data_list', [BarangMasukController::class, 'data_list']);
     Route::post('transaksi/barang_masuk/get_duplicate', [BarangMasukController::class, 'get_duplicate']);
 
@@ -105,9 +105,9 @@ Route::middleware('auth')->group(function () {
     Route::post('transaksi/pindah_locator/cek_locator', [PindahLocatorController::class, 'cek_locator']);
 
     // route laporan barang masuk
+    Route::resource('laporan/barang_masuk', LaporanBarangMasukController::class);
     Route::get('laporan/barang_masuk/{tgl_mulai}/{tgl_sampai}/print', [LaporanBarangMasukController::class, 'print']);
     Route::get('laporan/barang_masuk/{tgl_mulai}/{tgl_sampai}/print_supplier', [LaporanBarangMasukController::class, 'print_supplier']);
-    Route::resource('laporan/barang_masuk', LaporanBarangMasukController::class);
     Route::post('laporan/barang_masuk/hasil', [LaporanBarangMasukController::class, 'hasil']);
     Route::post('laporan/barang_masuk/hasil_supplier', [LaporanBarangMasukController::class, 'hasil_supplier']);
     Route::get('laporan/barang_masuk/{supplier_id}/detail_hasil_supplier', [LaporanBarangMasukController::class, 'detail_hasil_supplier']);
