@@ -56,4 +56,21 @@ if (!function_exists('getMenusSidebar')) {
         $cek_locators = Barang_masuk_details::where(['locator_id' => $id, 'status' => 0])->first();
         return $cek_locators;
     }
+
+    function create_checked($id_jabatan, $name_menu, $aksi)
+    {
+        $result = DB::table('jabatans')
+            ->join('ijin_jabatans', 'jabatans.id', '=', 'ijin_jabatans.jabatan_id')
+            ->join('ijins', 'ijin_jabatans.ijin_id', '=', 'ijins.id')
+            ->select('ijins.id')
+            ->where([
+                'jabatans.id' => $id_jabatan,
+                'ijins.name' => $name_menu,
+                'ijins.aksi' => $aksi,
+            ])
+            ->first();
+        if ($result != null) {
+            return true;
+        }
+    }
 }

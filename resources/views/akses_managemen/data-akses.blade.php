@@ -22,22 +22,26 @@
                         <h6 class="text-label">{{$menu->name}}</h6>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="read" data-menu="{{$menu->name}}"
-                                data-aksi="lihat">
+                                data-aksi="lihat" {{ create_checked($jabatan->id, $menu->name, 'lihat') ? 'checked' :
+                            'null' }}>
                             <label class="form-check-label" for="read">Lihat</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="create" data-menu="{{$menu->name}}"
-                                data-aksi="tambah" value="">
+                                data-aksi="tambah" {{ create_checked($jabatan->id, $menu->name, 'tambah') ? 'checked' :
+                            'null' }}>
                             <label class="form-check-label" for="create">Tambah</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="ubah" data-menu="{{$menu->name}}"
-                                data-aksi="ubah" value="">
+                                data-aksi="ubah" {{ create_checked($jabatan->id, $menu->name, 'ubah') ? 'checked' :
+                            'null' }}>
                             <label class="form-check-label" for="ubah">Ubah</label>
                         </div>
                         <div class="form-check form-check-inline mb-3">
                             <input class="form-check-input" type="checkbox" id="hapus" data-menu="{{$menu->name}}"
-                                data-aksi="hapus" value="">
+                                data-aksi="hapus" {{ create_checked($jabatan->id, $menu->name, 'hapus') ? 'checked' :
+                            'null' }}>
                             <label class="form-check-label" for="hapus">Hapus</label>
                         </div>
                         @endforeach
