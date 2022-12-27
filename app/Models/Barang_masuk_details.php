@@ -29,6 +29,18 @@ class Barang_masuk_details extends Model
         return $barang_masuk_details;
     }
 
+    static function getDetails2($id)
+    {
+        $barang_masuk_details = DB::table('barang_masuk_details AS A')
+            ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
+            ->join('mereks AS C', 'C.id', '=', 'A.merek_id')
+            ->select('A.id', 'B.nama AS nama_barang', 'C.nama AS nama_merek', 'A.qty', 'A.barang_id', 'A.merek_id', 'A.locator_id')
+            ->where('A.barang_masuk_id', '=', $id)
+            ->get();
+
+        return $barang_masuk_details;
+    }
+
     static function get_details_for_print($id)
     {
         $barang_masuk_details = DB::table('barang_masuk_details AS A')
@@ -78,7 +90,7 @@ class Barang_masuk_details extends Model
         $get_data = DB::table('barang_masuk_details AS A')
             ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
             ->select('A.id', 'B.nama AS nama_barang', 'A.barang_id')
-            ->where('A.locator_id', '=', $locator_id)
+            ->where(['A.locator_id' => $locator_id, 'A.status' => 0])
             ->get();
 
         return $get_data;

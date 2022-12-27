@@ -213,7 +213,7 @@
             cell3.innerHTML = namaBarang + '<input type="hidden" name="barangs_id[]" value="'+idBarang+'"></input>';
             cell4.innerHTML = namaMerek + '<input type="hidden" name="mereks_id[]" value="'+idMerek+'"></input>';
             cell5.innerHTML = harga + '<input type="hidden" id="harga_tabel_'+no+'" name="harga[]" value="'+harga+'"></input>';
-            cell6.innerHTML = '<input type="text" class="form-control" id="qty_tabel_'+no+'" onkeypress="return hanyaAngka(event)" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input><input type="hidden" name="not_in[]" value="'+not_in+'"></input>';
+            cell6.innerHTML = '<input type="text" class="form-control" id="qty_tabel_'+no+'" onkeypress="return hanyaAngka(event)" onchange="updateSubtotal('+no+')" name="qty[]" value="'+qty+'"></input><input type="hidden" name="id_barang_masuk_detail[]" value="'+idLocator+'"></input><input type="hidden" name="not_in[]" value="'+not_in+'"></input><input type="hidden" name="nama_barangs[]" value="'+namaBarang+'"></input>';
             cell7.innerHTML = '<input type="text" readonly class="form-control" id="subtotal_tabel_'+no+'" name="subtotal[]" value="'+subTotal+'"></input>';
             getTotal()
             reset()

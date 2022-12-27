@@ -53,7 +53,7 @@ if (!function_exists('getMenusSidebar')) {
 
     function cek_isi($id)
     {
-        $cek_locators = Barang_masuk_details::where('locator_id', $id)->first();
+        $cek_locators = Barang_masuk_details::where(['locator_id' => $id, 'status' => 0])->first();
         return $cek_locators;
     }
 }

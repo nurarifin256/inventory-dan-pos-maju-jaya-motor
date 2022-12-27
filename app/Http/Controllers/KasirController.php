@@ -9,6 +9,7 @@ use App\Models\Barangs;
 use App\Models\Kasirs;
 use App\Models\Mereks;
 use App\Models\Pelanggans;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -65,15 +66,16 @@ class KasirController extends Controller
             $no = 1;
         }
 
-        $barang_keluar->pelanggan_id    = $request->pelanggan_id;
+        $barang_keluar->pelanggan_id     = $request->pelanggan_id;
         $barang_keluar->no_barang_keluar = $tanggal . '/' . $no;
-        $barang_keluar->total           = str_replace(',', '', $request->total);
-        $barang_keluar->created_by      = Auth::user()->name;
-        $barang_keluar->updated_by      = Auth::user()->name;
+        $barang_keluar->total            = str_replace(',', '', $request->total);
+        $barang_keluar->created_by       = Auth::user()->name;
+        $barang_keluar->updated_by       = Auth::user()->name;
         $barang_keluar->save();
         $last_id = $barang_keluar->id;
 
         $barangs                = $request->barangs_id;
+        $nama_barangs           = $request->nama_barangs;
         $mereks                 = $request->mereks_id;
         $qty                    = $request->qty;
         $not_in                 = $request->not_in;
@@ -95,8 +97,19 @@ class KasirController extends Controller
             Barang_keluar_details::insert($data);
             $get_qty_old = Barang_masuk_details::where('id', $id_barang_masuk_detail[$key])->first();
             $qty_now     = $get_qty_old->qty - $qty[$key];
-            DB::table('barang_masuk_details')->where('id', $id_barang_masuk_detail[$key])->update(['qty' => $qty_now]);
+
+            if ($qty_now == 0) {
+                DB::table('barang_masuk_details')->where('id', $id_barang_masuk_detail[$key])->update(['qty' => $qty_now, 'status' => 1]);
+            } else {
+                DB::table('barang_masuk_details')->where('id', $id_barang_masuk_detail[$key])->update(['qty' => $qty_now]);
+            }
         }
+
+        // $pdf = Pdf::loadView('print.print-nota', ['barangs' => $nama_barangs]);
+        // $pdf->setBasePath(public_path());
+        // $pdf->setPaper('A4', 'potrait');
+        // return $pdf->stream("Print Nota");
+
         return redirect('pos/kasir');
     }
 

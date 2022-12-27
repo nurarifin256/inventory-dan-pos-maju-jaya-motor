@@ -54,7 +54,7 @@ class StagingAreaController extends Controller
     {
         $title                = "Detail Staging Area";
         $barang_masuk         = Barang_masuks::getBarangMasuk($id);
-        $barang_masuk_details = Barang_masuk_details::getDetails($id);
+        $barang_masuk_details = Barang_masuk_details::getDetails2($id);
         $locators             = Locators::getLocators();
         return view('staging.staging-area-detail', compact('title', 'barang_masuk', 'barang_masuk_details', 'locators'));
     }
