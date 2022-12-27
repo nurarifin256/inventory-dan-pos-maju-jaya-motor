@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Http\Controllers\Laporan;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\LaporanBarangKeluarRequest;
+use App\Models\Laporans;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class LaporanBarangKeluarController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $title = "Laporan Barang Keluar";
+
+        return view('laporan.laporan-barang-keluar', compact('title'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function hasil(LaporanBarangKeluarRequest $request)
+    {
+        if (cekAkses(Auth::user()->id, "Laporan Barang Keluar", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $title      = "Hasil Laporan Barang Keluar";
+        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai));
+        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai));
+        $datas      = Laporans::laporan_barang_keluar($tgl_mulai, $tgl_sampai);
+
+        return view('laporan.hasil-laporan-barang-keluar', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+    }
+}

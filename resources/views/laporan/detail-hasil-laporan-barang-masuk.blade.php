@@ -11,6 +11,7 @@
                     <thead>
                         <tr>
                             <th>Tanggal Masuk</th>
+                            <th>Nama Supplier</th>
                             <th>Qty</th>
                         </tr>
                     </thead>
@@ -18,6 +19,7 @@
                         @foreach ($datas as $data)
                         <tr>
                             <td>{{ $data->created_at }}</td>
+                            <td>{{ $data->nama }}</td>
                             <td>{{ $data->qty }}</td>
                         </tr>
                         @endforeach

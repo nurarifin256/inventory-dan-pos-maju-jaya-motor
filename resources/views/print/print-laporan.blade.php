@@ -61,7 +61,6 @@
             <thead>
                 <tr style="border-top: 5px">
                     <th>No</th>
-                    <th>Supplier</th>
                     <th>Nama Barang</th>
                     <th>Nama Merek</th>
                     <th>Qty</th>
@@ -71,7 +70,6 @@
                 @foreach ($datas as $no => $data)
                 <tr>
                     <td>{{ ++$no }}</td>
-                    <td>{{ $data->nama_supplier }}</td>
                     <td>{{ $data->nama_barang }}</td>
                     <td>{{ $data->nama_merek }}</td>
                     <td>{{ $data->total_qty }}</td>
