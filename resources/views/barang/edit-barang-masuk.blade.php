@@ -39,10 +39,10 @@
                             </div>
                             <div class="mb-3">
                                 <button type="button" onclick="tambahBaris('tabel_barang_masuk')"
-                                    class="btn btn-primary">Tambah Kolom</button>
+                                    class="btn btn-primary">Tambah Baris</button>
                                 <button type="button" onclick="hapusBaris('tabel_barang_masuk')"
                                     class="btn btn-warning">Hapus
-                                    Kolom</button>
+                                    Baris</button>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="tabel_barang_masuk">
@@ -57,13 +57,13 @@
                                     <tbody id="tabel_barang">
                                         @foreach ($barang_masuk_details->get() as $barang_masuk_detail)
                                         <tr>
-                                            <input type="hidden"
-                                                value="{{ $barang_masuk_detail->id_barang_masuk_detail }}"
-                                                name="id_barang_masuk_detail[]">
-                                            <input type="hidden"
-                                                value="{{ $barang_masuk_detail->id_barang_masuk_detail_laporan }}"
-                                                name="id_barang_masuk_detail[]">
                                             <td>
+                                                <input type="hidden"
+                                                    value="{{ $barang_masuk_detail->id_barang_masuk_detail }}"
+                                                    name="id_barang_masuk_detail[]">
+                                                <input type="hidden"
+                                                    value="{{ $barang_masuk_detail->id_barang_masuk_detail_laporan }}"
+                                                    name="id_barang_masuk_detail_laporan[]">
                                                 <input class="form-check-input" type="checkbox" name="chk[]"
                                                     id="flexCheckDefault">
                                             </td>

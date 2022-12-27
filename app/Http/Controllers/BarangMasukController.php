@@ -184,6 +184,7 @@ class BarangMasukController extends Controller
                     'updated_by'      => Auth::user()->name,
                 ];
             Barang_masuk_details::where('id', $id_barang_masuk_detail[$key])->update($data);
+            Barang_masuk_detail_laporans::where('id', $id_barang_masuk_detail_laporan[$key])->update($data);
             $where_not_in2[] = $value . '_' . $merek[$key];
         }
 
@@ -193,8 +194,18 @@ class BarangMasukController extends Controller
             ->whereNotIn("A.not_in", $where_not_in2)
             ->get();
 
+        $datass = DB::table("barang_masuk_detail_laporans AS B")
+            ->select(DB::raw("B.*, CONCAT(B.barang_id,'_',B.merek_id) AS WHERE_NOT_IN"))
+            ->whereRaw("B.barang_masuk_id=$id")
+            ->whereNotIn("B.not_in", $where_not_in2)
+            ->get();
+
         foreach ($datas as $data) {
             DB::table('barang_masuk_details')->where('id', $data->id)->update(['trashed' => 1]);
+        }
+
+        foreach ($datass as $data) {
+            DB::table('barang_masuk_detail_laporans')->where('id', $data->id)->update(['trashed' => 1]);
         }
 
         return redirect('transaksi/barang_masuk')->with([

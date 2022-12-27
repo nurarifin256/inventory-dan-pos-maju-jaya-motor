@@ -12,7 +12,7 @@ class Laporans extends Model
 
     static function laporan_barang_masuk($tgl_mulai, $tgl_sampai)
     {
-        $datas = DB::table('barang_masuk_details AS A')
+        $datas = DB::table('barang_masuk_detail_laporans AS A')
             ->join('barangs AS B', 'B.id', '=', 'A.barang_id')
             ->join('mereks AS C', 'C.id', '=', 'A.merek_id')
             ->join('barang_masuks AS D', 'D.id', '=', 'A.barang_masuk_id')
@@ -31,7 +31,7 @@ class Laporans extends Model
 
         $sql = "(SELECT A1.kirim, A1.id, SUM(C.qty) AS total_qty, D.nama AS nama_supplier, D.kode_supplier, A1.created_at, D.id AS supplier_id FROM
                         (SELECT COUNT(B.id) AS kirim, B.id, B.supplier_id, B.created_at FROM barang_masuks B WHERE B.status=1 AND B.trashed=0 GROUP BY B.id) A1
-                    INNER JOIN barang_masuk_details C ON C.barang_masuk_id=A1.id 
+                    INNER JOIN barang_masuk_detail_laporans C ON C.barang_masuk_id=A1.id 
                     INNER JOIN suppliers D ON D.id=A1.supplier_id
                     WHERE C.trashed=0 GROUP BY C.barang_masuk_id
                     ) AS A2";
@@ -44,7 +44,7 @@ class Laporans extends Model
     static function laporan_barang_masuk_detail_hasil_supplier($supplier_id, $tgl_mulai, $tgl_sampai)
     {
         $datas = DB::table('barang_masuks AS A')
-            ->join('barang_masuk_details AS B', 'B.barang_masuk_id', '=', 'A.id')
+            ->join('barang_masuk_detail_laporans AS B', 'B.barang_masuk_id', '=', 'A.id')
             ->join('barangs AS C', 'C.id', '=', 'B.barang_id')
             ->join('mereks AS D', 'D.id', '=', 'B.merek_id')
             ->select('A.created_at', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek')
