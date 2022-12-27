@@ -105,12 +105,16 @@ class KasirController extends Controller
             }
         }
 
-        // $pdf = Pdf::loadView('print.print-nota', ['barangs' => $nama_barangs]);
-        // $pdf->setBasePath(public_path());
-        // $pdf->setPaper('A4', 'potrait');
-        // return $pdf->stream("Print Nota");
+        $get_data = Kasirs::get_data_for_print($last_id);
+        $no_order = $tanggal . '/' . $no;
+        $kasir = Auth::user()->name;
+        $pdf = Pdf::loadView('print.print-nota', ['datas' => $get_data, 'kasir' => $kasir, 'no_order' => $no_order]);
+        $pdf->setBasePath(public_path());
+        $customPaper = array(0, 0, 360, 360);
+        $pdf->set_paper($customPaper);
+        return $pdf->stream("Print Nota");
 
-        return redirect('pos/kasir');
+        // return redirect('pos/kasir');
     }
 
     /**

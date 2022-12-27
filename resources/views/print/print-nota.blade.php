@@ -7,10 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <style>
-    body {
-        font-family: 'Lato', Arial, sans-serif;
-    }
-
     #container {
         position: relative;
     }
@@ -38,8 +34,8 @@
     table,
     th,
     td {
-        border: 1px solid rgb(110, 106, 106);
-        border-collapse: collapse;
+        /* border: 1px solid rgb(110, 106, 106); */
+        /* border-collapse: collapse; */
     }
 
     th,
@@ -55,8 +51,10 @@
         </div>
         <hr>
         <div id="range-tanggal">
-            <label>Hari ini</label>
+            <label>Kasir : {{ $kasir }}</label><br>
+            <label>No Order : {{ $no_order }}</label>
         </div>
+        <hr>
         <table>
             <thead>
                 <tr style="border-top: 5px">
@@ -68,8 +66,21 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($datas->get() as $no => $data)
+                @php
+                @$grand_total += $data->qty * $data->harga;
+                @endphp
                 <tr>
-                    <td>{{ $barangs }}</td>
+                    <td>{{ ++$no }}</td>
+                    <td>{{ $data->nama_barang }} - {{ $data->nama_merek }}</td>
+                    <td align="right">{{ number_format($data->harga) }}</td>
+                    <td>{{ $data->qty }}</td>
+                    <td align="right">{{ number_format($data->qty * $data->harga) }}</td>
+                </tr>
+                @endforeach
+                <tr>
+                    <td colspan="4" align="center">Total</td>
+                    <td align="right">{{ number_format($grand_total) }}</td>
                 </tr>
             </tbody>
         </table>

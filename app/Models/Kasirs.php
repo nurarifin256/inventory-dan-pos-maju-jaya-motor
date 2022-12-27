@@ -52,4 +52,19 @@ class Kasirs extends Model
 
         return $datas;
     }
+
+    static function get_data_for_print($id)
+    {
+        $datas = DB::table('barang_keluars AS A')
+            ->join('barang_keluar_details AS B', 'B.barang_keluar_id', '=', 'A.id')
+            ->join('barangs AS C', 'C.id', '=', 'B.barang_id')
+            ->join('mereks AS D', 'D.id', '=', 'B.merek_id')
+            ->select('A.total', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek', 'C.harga', 'A.no_barang_keluar')
+            ->where([
+                'A.id'  => $id,
+                'A.trashed' => 0,
+            ]);
+
+        return $datas;
+    }
 }
