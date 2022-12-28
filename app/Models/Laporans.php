@@ -55,6 +55,21 @@ class Laporans extends Model
         return $sqls;
     }
 
+    static function laporan_barang_masuk_pelanggan($tgl_mulai, $tgl_sampai)
+    {
+
+        $sql = "(SELECT A1.kirim, A1.id, SUM(C.qty) AS total_qty, D.nama AS nama_pelanggan, A1.created_at, D.id AS pelanggan_id FROM
+                        (SELECT COUNT(B.id) AS kirim, B.id, B.pelanggan_id, B.created_at FROM barang_keluars B WHERE B.trashed=0 GROUP BY B.id) A1
+                    INNER JOIN barang_keluar_details C ON C.barang_keluar_id=A1.id 
+                    INNER JOIN pelanggans D ON D.id=A1.pelanggan_id
+                    WHERE C.trashed=0 GROUP BY C.barang_keluar_id
+                    ) AS A2";
+
+        $sqls = DB::table(DB::raw($sql));
+        $sqls->whereBetween('A2.created_at', [$tgl_mulai, $tgl_sampai]);
+        return $sqls;
+    }
+
     static function laporan_barang_masuk_detail_hasil_supplier($supplier_id, $tgl_mulai, $tgl_sampai)
     {
         $datas = DB::table('barang_masuks AS A')

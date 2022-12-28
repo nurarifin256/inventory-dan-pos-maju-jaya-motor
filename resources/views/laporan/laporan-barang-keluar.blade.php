@@ -68,7 +68,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ url('laporan/barang_masuk/hasil_supplier') }}" method="post">
+                        <form action="{{ url('laporan/barang_keluar/hasil_pelanggan') }}" method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">

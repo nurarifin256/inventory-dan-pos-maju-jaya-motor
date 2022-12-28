@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Laporan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LaporanBarangKeluarCustomerRequest;
 use App\Http\Requests\LaporanBarangKeluarRequest;
 use App\Models\Barang_keluar_details;
 use App\Models\Laporans;
@@ -119,5 +120,19 @@ class LaporanBarangKeluarController extends Controller
         $pdf->setBasePath(public_path());
         $pdf->setPaper('A4', 'potrait');
         return $pdf->stream("Print Laporan");
+    }
+
+    public function hasil_pelanggan(LaporanBarangKeluarCustomerRequest $request)
+    {
+        if (cekAkses(Auth::user()->id, "Laporan Barang Masuk", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $title      = "Hasil Laporan Barang Masuk Supplier";
+        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
+        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
+        $datas      = Laporans::laporan_barang_masuk_pelanggan($tgl_mulai, $tgl_sampai);
+
+        return view('laporan.hasil-laporan-barang-keluar-pelanggan', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
     }
 }
