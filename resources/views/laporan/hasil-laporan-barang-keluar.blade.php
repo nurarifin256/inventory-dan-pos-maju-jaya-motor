@@ -86,7 +86,7 @@
 
         $.ajax({
             method: "get",
-            url: `{{url('laporan/barang_masuk')}}/${not_in}`,
+            url: `{{url('laporan/barang_keluar')}}/${not_in}`,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                     "content"
