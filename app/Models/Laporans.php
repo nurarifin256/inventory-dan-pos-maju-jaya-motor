@@ -55,7 +55,7 @@ class Laporans extends Model
         return $sqls;
     }
 
-    static function laporan_barang_masuk_pelanggan($tgl_mulai, $tgl_sampai)
+    static function laporan_barang_keluar_pelanggan($tgl_mulai, $tgl_sampai)
     {
 
         $sql = "(SELECT A1.kirim, A1.id, SUM(C.qty) AS total_qty, D.nama AS nama_pelanggan, A1.created_at, D.id AS pelanggan_id FROM

@@ -124,15 +124,25 @@ class LaporanBarangKeluarController extends Controller
 
     public function hasil_pelanggan(LaporanBarangKeluarCustomerRequest $request)
     {
-        if (cekAkses(Auth::user()->id, "Laporan Barang Masuk", "lihat") != TRUE) {
+        if (cekAkses(Auth::user()->id, "Laporan Barang Keluar", "lihat") != TRUE) {
             abort(403, 'unauthorized');
         }
 
         $title      = "Hasil Laporan Barang Masuk Supplier";
         $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
         $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
-        $datas      = Laporans::laporan_barang_masuk_pelanggan($tgl_mulai, $tgl_sampai);
+        $datas      = Laporans::laporan_barang_keluar_pelanggan($tgl_mulai, $tgl_sampai);
 
         return view('laporan.hasil-laporan-barang-keluar-pelanggan', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+    }
+
+    public function print_pelanggan($tgl_mulai, $tgl_sampai)
+    {
+        $datas      = Laporans::laporan_barang_keluar_pelanggan($tgl_mulai, $tgl_sampai);
+
+        $pdf = Pdf::loadView('print.print-laporan-barang-keluar-pelanggan', ['datas' => $datas, 'tgl_mulai' => $tgl_mulai, 'tgl_sampai' => $tgl_sampai]);
+        $pdf->setBasePath(public_path());
+        $pdf->setPaper('A4', 'potrait');
+        return $pdf->stream("Print Laporan Supplier");
     }
 }
