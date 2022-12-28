@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-md-4 offset-md-4">
                                 <a target="_blank"
-                                    href="{{ url('laporan/barang_masuk/'.$tgl_mulai.'/'.$tgl_sampai.'/print') }}"
+                                    href="{{ url('laporan/barang_keluar/'.$tgl_mulai.'/'.$tgl_sampai.'/print') }}"
                                     class="btn btn-sm btn-primary"><i class="ti-printer"></i> Print
                                 </a>
                             </div>

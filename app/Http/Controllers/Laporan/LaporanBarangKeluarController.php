@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LaporanBarangKeluarRequest;
 use App\Models\Barang_keluar_details;
 use App\Models\Laporans;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -108,5 +109,15 @@ class LaporanBarangKeluarController extends Controller
         $datas      = Laporans::laporan_barang_keluar($tgl_mulai, $tgl_sampai);
 
         return view('laporan.hasil-laporan-barang-keluar', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+    }
+
+    public function print($tgl_mulai, $tgl_sampai)
+    {
+        $datas      = Laporans::laporan_barang_keluar($tgl_mulai, $tgl_sampai);
+
+        $pdf = Pdf::loadView('print.print-laporan-barang-keluar', ['datas' => $datas, 'tgl_mulai' => $tgl_mulai, 'tgl_sampai' => $tgl_sampai]);
+        $pdf->setBasePath(public_path());
+        $pdf->setPaper('A4', 'potrait');
+        return $pdf->stream("Print Laporan");
     }
 }
