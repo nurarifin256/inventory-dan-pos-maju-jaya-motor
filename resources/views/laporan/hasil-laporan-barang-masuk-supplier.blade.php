@@ -22,11 +22,12 @@
                     <div class="card-body">
                         <div class="row mb-3 justify-content-between">
                             <div class="col-md-4">
-                                <label>Dari {{ $tgl_mulai }} Sampai {{ $tgl_sampai }}</label>
+                                <label>Dari {{ date('d-M-Y', strtotime($tgl_jam_m)) }} Sampai {{ date('d-M-Y',
+                                    strtotime($tgl_jam_s)) }}</label>
                             </div>
                             <div class="col-md-4 offset-md-4">
                                 <a target="_blank"
-                                    href="{{ url('laporan/barang_masuk/'.$tgl_mulai.'/'.$tgl_sampai.'/print_supplier') }}"
+                                    href="{{ url('laporan/barang_masuk/'.$tgl_jam_m.'/'.$tgl_jam_s.'/print_supplier') }}"
                                     class="btn btn-sm btn-primary"><i class="ti-printer"></i> Print
                                 </a>
                             </div>
@@ -84,8 +85,8 @@
     function detail_laporan(no)
     {
         const supplier_id = $('#supplier_id_'+no).val()
-        const tgl_mulai = "{{ $tgl_mulai }}"
-        const tgl_sampai = "{{ $tgl_sampai }}"
+        const tgl_mulai = "{{ $tgl_jam_m }}"
+        const tgl_sampai = "{{ $tgl_jam_s }}"
 
         $.ajax({
             method: "get",

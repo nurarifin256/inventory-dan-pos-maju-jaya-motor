@@ -136,6 +136,17 @@ class LaporanBarangKeluarController extends Controller
         return view('laporan.hasil-laporan-barang-keluar-pelanggan', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
     }
 
+    public function detail_hasil_pelanggan(Request $request, $id_pelanggan)
+    {
+        if (cekAkses(Auth::user()->id, "Laporan Barang Keluar", "lihat") != TRUE) {
+            abort(403, 'unauthorized');
+        }
+
+        $created_at  = $request->created_at;
+        $datas      = Laporans::laporan_barang_keluar_detail_hasil_pelanggan($id_pelanggan, $created_at);
+        return view('laporan.detail-hasil-laporan-barang-masuk-pelanggan', compact('id_pelanggan', 'datas'));
+    }
+
     public function print_pelanggan($tgl_mulai, $tgl_sampai)
     {
         $datas      = Laporans::laporan_barang_keluar_pelanggan($tgl_mulai, $tgl_sampai);
@@ -143,6 +154,6 @@ class LaporanBarangKeluarController extends Controller
         $pdf = Pdf::loadView('print.print-laporan-barang-keluar-pelanggan', ['datas' => $datas, 'tgl_mulai' => $tgl_mulai, 'tgl_sampai' => $tgl_sampai]);
         $pdf->setBasePath(public_path());
         $pdf->setPaper('A4', 'potrait');
-        return $pdf->stream("Print Laporan Supplier");
+        return $pdf->stream("Print Laporan Pelanggan");
     }
 }

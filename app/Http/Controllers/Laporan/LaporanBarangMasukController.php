@@ -107,12 +107,15 @@ class LaporanBarangMasukController extends Controller
             abort(403, 'unauthorized');
         }
 
-        $title      = "Hasil Laporan Barang Masuk";
-        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai));
-        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai));
-        $datas      = Laporans::laporan_barang_masuk($tgl_mulai, $tgl_sampai);
+        $tgl_m = date('Y-m-d', strtotime($request->tgl_mulai));
+        $tgl_s = date('Y-m-d', strtotime($request->tgl_sampai));
+        $tgl_jam_m = $tgl_m . " 00:00:00";
+        $tgl_jam_s = $tgl_s . " 23:59:00";
 
-        return view('laporan.hasil-laporan-barang-masuk', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+        $title      = "Hasil Laporan Barang Masuk";
+        $datas      = Laporans::laporan_barang_masuk($tgl_jam_m, $tgl_jam_s);
+
+        return view('laporan.hasil-laporan-barang-masuk', compact('tgl_jam_m', 'tgl_jam_s', 'title', 'datas'));
     }
 
     public function hasil_supplier(LaporanBarangMasukSupplierRequest $request)
@@ -122,13 +125,13 @@ class LaporanBarangMasukController extends Controller
         }
 
         $title      = "Hasil Laporan Barang Masuk Supplier";
-        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
-        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
-        $datas      = Laporans::laporan_barang_masuk_supplier($tgl_mulai, $tgl_sampai);
+        $tgl_m = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
+        $tgl_s = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
+        $tgl_jam_m = $tgl_m . " 00:00:00";
+        $tgl_jam_s = $tgl_s . " 23:59:00";
 
-        // dd($datas->get());
-
-        return view('laporan.hasil-laporan-barang-masuk-supplier', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+        $datas      = Laporans::laporan_barang_masuk_supplier($tgl_jam_m, $tgl_jam_s);
+        return view('laporan.hasil-laporan-barang-masuk-supplier', compact('tgl_jam_m', 'tgl_jam_s', 'title', 'datas'));
     }
 
     public function detail_hasil_supplier(Request $request, $id_supplier)

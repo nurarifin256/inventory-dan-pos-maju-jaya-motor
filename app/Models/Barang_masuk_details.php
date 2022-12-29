@@ -101,7 +101,7 @@ class Barang_masuk_details extends Model
         $datas = DB::table('barang_masuk_details AS A')
             ->join('barang_masuks AS B', 'B.id', '=', 'A.barang_masuk_id')
             ->join('suppliers AS C', 'C.id', '=', 'B.supplier_id')
-            ->select('A.id', 'A.qty', 'B.created_at', 'C.nama')
+            ->select('A.id', 'A.qty', 'B.created_at', 'C.nama', 'B.no_barang_masuk')
             ->where(['A.not_in' => $not_in, 'B.trashed' => 0, 'B.status' => 1])
             ->whereBetween('B.created_at', [$tgl_mulai, $tgl_sampai])
             ->get();

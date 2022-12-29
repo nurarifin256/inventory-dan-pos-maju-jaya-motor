@@ -37,6 +37,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Tanggal</th>
                                         <th>Pelanggan</th>
                                         <th>Jumlah Kedatangan</th>
                                         <th>Jumlah Pembelian</th>
@@ -47,12 +48,15 @@
                                     @foreach ($datas->get() as $no => $data)
                                     <tr>
                                         <td>{{ ++$no }}</td>
+                                        <td>{{ $data->created_at }}</td>
                                         <td>{{ $data->nama_pelanggan }}</td>
                                         <td>{{ $data->kirim }} X</td>
                                         <td>{{ $data->total_qty }} pcs</td>
                                         <td>
-                                            <input type="hidden" id="supplier_id_{{ $no }}"
+                                            <input type="hidden" id="pelanggan_id_{{ $no }}"
                                                 value="{{ $data->pelanggan_id }}">
+                                            <input type="hidden" id="created_at_{{ $no }}"
+                                                value="{{ $data->created_at }}">
                                             <button type="button" class="btn btn-sm btn-info"
                                                 onclick="detail_laporan({{ $no }})" id="detail_laporan"><i
                                                     class="ti-eye"></i></button>
@@ -81,19 +85,18 @@
     const modal = new bootstrap.Modal($("#modalAction"));
     function detail_laporan(no)
     {
-        const supplier_id = $('#supplier_id_'+no).val()
-        const tgl_mulai = "{{ $tgl_mulai }}"
-        const tgl_sampai = "{{ $tgl_sampai }}"
+        const pelanggan_id = $('#pelanggan_id_'+no).val()
+        const created_at = $('#created_at_'+no).val()
 
         $.ajax({
             method: "get",
-            url: `{{url('laporan/barang_masuk/')}}/${supplier_id}/detail_hasil_supplier`,
+            url: `{{url('laporan/barang_keluar/')}}/${pelanggan_id}/detail_hasil_pelanggan`,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
                     "content"
                 ),
             },
-            data: {tgl_mulai, tgl_sampai},
+            data: {created_at,},
             success: function(res){
                 $("#modalAction").find(".modal-dialog").html(res);
                 modal.show();

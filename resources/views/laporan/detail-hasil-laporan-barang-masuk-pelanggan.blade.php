@@ -10,9 +10,8 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Tanggal Masuk</th>
-                            <th>No Barang Masuk</th>
-                            <th>Nama Supplier</th>
+                            <th>Tanggal Keluar</th>
+                            <th>Barang - Merek</th>
                             <th>Qty</th>
                         </tr>
                     </thead>
@@ -20,8 +19,7 @@
                         @foreach ($datas as $data)
                         <tr>
                             <td>{{ $data->created_at }}</td>
-                            <td>{{ $data->no_barang_masuk }}</td>
-                            <td>{{ $data->nama }}</td>
+                            <td>{{ $data->nama_barang }} - {{ $data->nama_merek }}</td>
                             <td>{{ $data->qty }}</td>
                         </tr>
                         @endforeach
