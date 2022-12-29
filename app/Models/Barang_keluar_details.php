@@ -17,7 +17,7 @@ class Barang_keluar_details extends Model
         $datas = DB::table('barang_keluar_details AS A')
             ->join('barang_keluars AS B', 'B.id', '=', 'A.barang_keluar_id')
             ->join('pelanggans AS C', 'C.id', '=', 'B.pelanggan_id')
-            ->select('A.id', 'A.qty', 'B.created_at', 'C.nama')
+            ->select('A.id', 'A.qty', 'B.created_at', 'C.nama', 'B.no_barang_keluar')
             ->where(['A.not_in' => $not_in, 'B.trashed' => 0])
             ->whereBetween('B.created_at', [$tgl_mulai, $tgl_sampai])
             ->get();

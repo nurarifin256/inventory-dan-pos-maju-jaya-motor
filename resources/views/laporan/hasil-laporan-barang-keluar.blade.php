@@ -21,11 +21,6 @@
                         <form action="{{ url('laporan/barang_keluar/hasil') }}" method="post">
                             @csrf
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label for="">Barang</label>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-5">
                                     <label for="datepicker-icon" class="form-label">Tanggal Mulai</label>
                                     <div class="input-group input-append date mb-2" data-date-format="dd-mm-yyyy">

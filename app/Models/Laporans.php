@@ -56,11 +56,11 @@ class Laporans extends Model
     static function laporan_barang_keluar_pelanggan($tgl_mulai, $tgl_sampai)
     {
 
-        $sql = "(SELECT A1.kirim, A1.id, SUM(C.qty) AS total_qty, D.nama AS nama_pelanggan, A1.created_at, D.id AS pelanggan_id FROM
-                        (SELECT COUNT(B.id) AS kirim, B.id, B.pelanggan_id, B.created_at FROM barang_keluars B WHERE B.trashed=0 GROUP BY B.id) A1
+        $sql = "(SELECT COUNT(A1.id) AS kirim, A1.id, SUM(C.qty) AS total_qty, D.nama AS nama_pelanggan, A1.created_at, D.id AS pelanggan_id FROM
+                        (SELECT B.id, B.pelanggan_id, B.created_at FROM barang_keluars B WHERE B.trashed=0) A1
                     INNER JOIN barang_keluar_details C ON C.barang_keluar_id=A1.id 
                     INNER JOIN pelanggans D ON D.id=A1.pelanggan_id
-                    WHERE C.trashed=0 GROUP BY C.barang_keluar_id
+                    WHERE C.trashed=0 GROUP BY D.id
                     ) AS A2";
 
         $sqls = DB::table(DB::raw($sql));
@@ -82,14 +82,15 @@ class Laporans extends Model
         return $datas;
     }
 
-    static function laporan_barang_keluar_detail_hasil_pelanggan($pelanggan_id, $created_at)
+    static function laporan_barang_keluar_detail_hasil_pelanggan($pelanggan_id, $tgl_mulai, $tgl_sampai)
     {
         $datas = DB::table('barang_keluars AS A')
             ->join('barang_keluar_details AS B', 'B.barang_keluar_id', '=', 'A.id')
             ->join('barangs AS C', 'C.id', '=', 'B.barang_id')
             ->join('mereks AS D', 'D.id', '=', 'B.merek_id')
-            ->select('A.created_at', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek')
-            ->where(['A.trashed' => 0, 'B.trashed' => 0, 'A.pelanggan_id' => $pelanggan_id, 'A.created_at' => $created_at])
+            ->select('A.created_at', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek', 'A.no_barang_keluar')
+            ->where(['A.trashed' => 0, 'B.trashed' => 0, 'A.pelanggan_id' => $pelanggan_id])
+            ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
             ->get();
 
         return $datas;

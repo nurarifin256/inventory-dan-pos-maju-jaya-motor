@@ -132,11 +132,14 @@ class LaporanBarangKeluarController extends Controller
         }
 
         $title      = "Hasil Laporan Barang Masuk Supplier";
-        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
-        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
-        $datas      = Laporans::laporan_barang_keluar_pelanggan($tgl_mulai, $tgl_sampai);
+        $tgl_m = date('Y-m-d', strtotime($request->tgl_mulai_supplier));
+        $tgl_s = date('Y-m-d', strtotime($request->tgl_sampai_supplier));
+        $tgl_jam_m = $tgl_m . " 00:00:00";
+        $tgl_jam_s = $tgl_s . " 23:59:00";
 
-        return view('laporan.hasil-laporan-barang-keluar-pelanggan', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+        $datas      = Laporans::laporan_barang_keluar_pelanggan($tgl_jam_m, $tgl_jam_s);
+
+        return view('laporan.hasil-laporan-barang-keluar-pelanggan', compact('tgl_jam_m', 'tgl_jam_s', 'title', 'datas'));
     }
 
     public function detail_hasil_pelanggan(Request $request, $id_pelanggan)
@@ -145,8 +148,10 @@ class LaporanBarangKeluarController extends Controller
             abort(403, 'unauthorized');
         }
 
-        $created_at  = $request->created_at;
-        $datas      = Laporans::laporan_barang_keluar_detail_hasil_pelanggan($id_pelanggan, $created_at);
+        $created_at = $request->created_at;
+        $tgl_mulai  = $request->tgl_mulai;
+        $tgl_sampai = $request->tgl_sampai;
+        $datas      = Laporans::laporan_barang_keluar_detail_hasil_pelanggan($id_pelanggan, $tgl_mulai, $tgl_sampai);
         return view('laporan.detail-hasil-laporan-barang-masuk-pelanggan', compact('id_pelanggan', 'datas'));
     }
 
