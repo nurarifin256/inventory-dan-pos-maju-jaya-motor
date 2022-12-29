@@ -24,6 +24,17 @@
                 </a>
             </li>
 
+
+            @if (cekAkses(Auth::user()->id, "Menu Managemen", "lihat") == TRUE)
+            <li class="{{request()->segment(1) == 'menu' ? 'active' : '' }}">
+                <a href="{{url('menu')}}" class="link">
+                    <i class="ti-menu-alt"></i>
+                    <span>Menu Managemen</span>
+                </a>
+            </li>
+            @endif
+
+
             @foreach (getMenusSidebar() as $menu)
             @if (cekAkses(Auth::user()->id, $menu->name, "lihat") == TRUE)
             <li class="{{request()->segment(1) == $menu->url ? 'active open' : '' }}">

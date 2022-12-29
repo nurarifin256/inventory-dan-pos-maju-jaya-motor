@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 if (!function_exists('getMenusSidebar')) {
     function getMenusSidebar()
     {
-        return Menus::with('subMenus')->where('trashed', 0)->whereNull('main_menu')->get();
+        return Menus::with('subMenus')->where('trashed', 0)->whereNot('id', 6)->whereNull('main_menu')->get();
     }
 
     function cekAkses($id, $menu, $aksi)
