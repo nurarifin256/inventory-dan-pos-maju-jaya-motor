@@ -105,11 +105,14 @@ class LaporanBarangKeluarController extends Controller
         }
 
         $title      = "Hasil Laporan Barang Keluar";
-        $tgl_mulai  = date('Y-m-d', strtotime($request->tgl_mulai));
-        $tgl_sampai = date('Y-m-d', strtotime($request->tgl_sampai));
-        $datas      = Laporans::laporan_barang_keluar($tgl_mulai, $tgl_sampai);
+        $tgl_m = date('Y-m-d', strtotime($request->tgl_mulai));
+        $tgl_s = date('Y-m-d', strtotime($request->tgl_sampai));
+        $tgl_jam_m = $tgl_m . " 00:00:00";
+        $tgl_jam_s = $tgl_s . " 23:59:00";
 
-        return view('laporan.hasil-laporan-barang-keluar', compact('tgl_mulai', 'tgl_sampai', 'title', 'datas'));
+        $datas      = Laporans::laporan_barang_keluar($tgl_jam_m, $tgl_jam_s);
+
+        return view('laporan.hasil-laporan-barang-keluar', compact('tgl_jam_m', 'tgl_jam_s', 'title', 'datas'));
     }
 
     public function print($tgl_mulai, $tgl_sampai)

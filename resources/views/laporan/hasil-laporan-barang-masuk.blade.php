@@ -62,11 +62,11 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>Barang Masuk</h4>
+                        <h4>Barang Masuk Berdasarkan Barang</h4>
                     </div>
 
                     <div class="card-body">
-                        <div class="row my-3">
+                        <div class="row mb-3">
                             <div class="col-md-5">
                                 <label>Dari {{ date('d-M-Y', strtotime($tgl_jam_m)) }} Sampai {{ date('d-M-Y',
                                     strtotime($tgl_jam_s)) }}</label>

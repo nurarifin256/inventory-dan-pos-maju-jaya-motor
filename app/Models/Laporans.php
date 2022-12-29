@@ -74,7 +74,7 @@ class Laporans extends Model
             ->join('barang_masuk_detail_laporans AS B', 'B.barang_masuk_id', '=', 'A.id')
             ->join('barangs AS C', 'C.id', '=', 'B.barang_id')
             ->join('mereks AS D', 'D.id', '=', 'B.merek_id')
-            ->select('A.created_at', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek')
+            ->select('A.created_at', 'B.qty', 'C.nama AS nama_barang', 'D.nama AS nama_merek', 'A.no_barang_masuk')
             ->where(['A.status' => 1, 'A.trashed' => 0, 'B.trashed' => 0, 'A.supplier_id' => $supplier_id])
             ->whereBetween('A.created_at', [$tgl_mulai, $tgl_sampai])
             ->get();
